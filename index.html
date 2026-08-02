@@ -69,7 +69,7 @@
             filter: brightness(1.1);
         }
 
-        /* Login Container - เต็มจอและจัดกึ่งกลาง */
+        /* Login Container - ເຕັມຈໍແລະຈັດກຶ່ງາງ */
         .login-panel {
             width: 100%;
             height: 100%;
@@ -155,7 +155,7 @@
             display: none;
         }
 
-        /* Main Bot Panel - ขยายเต็มจอ 100% ทั้งความกว้างและความสูง */
+        /* Main Bot Panel - ຂຍາຍເຕັມຈໍ 100% ທັງຄວາມກວ້າງ ແລະຄວາມສູງ */
         .bot-panel {
             width: 100%;            
             height: 100%;            
@@ -761,7 +761,7 @@
         if (isMobileView) {
             document.body.classList.add('mobile-view-active');
             viewModeIcon.className = 'fa-solid fa-desktop';
-            viewModeText.innerText = 'ມุมມອງເຕັມຈໍ';
+            viewModeText.innerText = 'ມຸມມອງເຕັມຈໍ';
         } else {
             document.body.classList.remove('mobile-view-active');
             viewModeIcon.className = 'fa-solid fa-mobile-screen-button';
@@ -812,6 +812,7 @@
     let isSoundEnabled = true;
 
     let audioCtx = null;
+    let audioUnlocked = false;
 
     function getAudioContext() {
         if (!audioCtx) {
@@ -823,9 +824,32 @@
         return audioCtx;
     }
 
-    document.addEventListener('click', () => {
-        getAudioContext();
-    }, { once: true });
+    // ປົດລັອກສຽງສຳລັບ Mobile Browser (Safari / Chrome Mobile)
+    function unlockMobileAudio() {
+        if (audioUnlocked) return;
+        try {
+            const ctx = getAudioContext();
+            const buffer = ctx.createBuffer(1, 1, 22050);
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            source.start(0);
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance('');
+                window.speechSynthesis.speak(utterance);
+            }
+            audioUnlocked = true;
+            console.log("Mobile Audio Unlocked Successfully.");
+        } catch (e) {
+            console.log("Unlock audio error:", e);
+        }
+    }
+
+    // ດັກຈັບທຸກການແຕະຫນ້າຈໍເພື່ອເປີດໃຊ້ສຽງ
+    document.addEventListener('touchstart', unlockMobileAudio, { once: true });
+    document.addEventListener('click', unlockMobileAudio, { once: true });
 
     const BASE_AMOUNT = 10;
 
@@ -977,21 +1001,21 @@
             osc.start(now);
             osc.stop(now + 0.2);
 
-            const textToSpeak = encodeURIComponent(`${word}, ${word}`);
-            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${textToSpeak}&tl=en&client=tw-ob`;
-            
-            const audio = new Audio(audioUrl);
-            audio.volume = 1.0;
-
-            audio.play().catch(e => {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(`${word}! ${word}!`);
-                    utterance.lang = 'en-US';
-                    utterance.rate = 1.1;
-                    window.speechSynthesis.speak(utterance);
-                }
-            });
+            // ໃຊ້ Web Speech API ເປັນຫຼັກ ເພາະຮອງຮັບມືຖືໄດ້ດີທີ່ສຸດ ແລະບໍ່ຕິດ CORS
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(`${word}! ${word}!`);
+                utterance.lang = 'en-US';
+                utterance.rate = 1.1;
+                utterance.volume = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                const textToSpeak = encodeURIComponent(`${word}, ${word}`);
+                const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${textToSpeak}&tl=en&client=tw-ob`;
+                const audio = new Audio(audioUrl);
+                audio.volume = 1.0;
+                audio.play().catch(e => console.log("Audio play fallback error:", e));
+            }
 
         } catch (e) {
             console.log("Speech synthesis error:", e);
@@ -1366,6 +1390,7 @@
     }
 
     clearBtn.addEventListener('click', () => {
+        unlockMobileAudio();
         const pairLabel = currentPair.replace('USDT', '');
         modalPairText.innerText = `${pairLabel} (${currentStrategy})`;
         clearModal.classList.add('active');
@@ -1418,6 +1443,7 @@
     checkLoginStatus();
 
     toggleBtn.addEventListener('click', () => {
+        unlockMobileAudio();
         if (isRunning) {
             stopTimer();
             isRunning = false;
