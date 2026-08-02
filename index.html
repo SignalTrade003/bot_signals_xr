@@ -17,50 +17,61 @@
             box-sizing: border-box; 
             font-family: 'Noto Sans Lao', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         }
-        body { 
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
             background-color: #0d1117; 
             color: #fff; 
-            margin: 0; 
-            padding: 20px; 
             display: flex; 
             justify-content: center; 
             align-items: center;     
-            min-height: 100vh;
+            overflow: hidden;
         }
 
-        /* Login Container */
+        /* Login Container - เต็มจอและจัดกึ่งกลาง */
         .login-panel {
-            width: 380px;
-            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            max-width: none;
             background-color: #121820;
-            border: 1px solid #2a3441;
-            border-radius: 12px;
+            border: none;
+            border-radius: 0;
             padding: 24px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
+        .login-inner {
+            width: 100%;
+            max-width: 420px;
+        }
         .login-logo {
-            font-size: 36px;
+            font-size: 48px;
             margin-bottom: 12px;
             color: #00e676;
         }
         .login-title {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: bold;
             margin-bottom: 6px;
         }
         .login-desc {
-            font-size: 11px;
+            font-size: 13px;
             color: #8b9bb4;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             text-align: left;
         }
         .form-group label {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
             color: #8b9bb4;
             margin-bottom: 6px;
         }
@@ -70,8 +81,8 @@
             color: #fff;
             border: 1px solid #363c4e;
             border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 13px;
+            padding: 12px 14px;
+            font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
         }
@@ -84,9 +95,9 @@
             color: #ffffff;
             border: none;
             border-radius: 8px;
-            padding: 11px;
+            padding: 13px;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             text-transform: uppercase;
             margin-top: 10px;
@@ -99,22 +110,25 @@
         }
         .error-msg {
             color: #ff5252;
-            font-size: 11px;
+            font-size: 12px;
             margin-top: 10px;
             display: none;
         }
 
-        /* Main Bot Panel */
+        /* Main Bot Panel - ขยายเต็มจอ 100% ทั้งความกว้างและความสูง */
         .bot-panel {
-            width: 380px;            
-            max-width: 100%;         
+            width: 100%;            
+            height: 100%;            
+            max-width: none;         
             background-color: #121820;
-            border: 1px solid #2a3441;
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 0;
+            padding: 16px;
+            box-shadow: none;
             position: relative;
             display: none; 
+            flex-direction: column;
+            overflow-y: auto;
         }
 
         /* Header Bar */
@@ -122,9 +136,9 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            font-size: 14px; 
+            font-size: 16px; 
             font-weight: bold; 
-            margin-bottom: 10px; 
+            margin-bottom: 12px; 
         }
         .header-right {
             display: flex;
@@ -135,13 +149,13 @@
             background: #1a222d;
             border: 1px solid #363c4e;
             color: #00e676;
-            border-radius: 4px;
-            width: 28px;
-            height: 28px;
+            border-radius: 6px;
+            width: 34px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -152,26 +166,26 @@
         .close-btn { 
             color: #ff5252; 
             cursor: pointer; 
-            font-size: 14px; 
-            width: 28px;
-            height: 28px;
+            font-size: 16px; 
+            width: 34px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #1a222d;
             border: 1px solid #363c4e;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         /* Stats Bar Top */
         .stats-top { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 10px; 
+            font-size: 12px; 
             background: #1a222d; 
-            padding: 6px 8px; 
-            border-radius: 6px; 
-            margin-bottom: 10px; 
+            padding: 10px 14px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
         }
         .stats-top span { color: #8b9bb4; }
         .val-win { color: #00e676; font-weight: bold; }
@@ -182,14 +196,14 @@
         .account-info { 
             display: flex; 
             justify-content: space-between; 
-            gap: 8px; 
-            margin-bottom: 10px; 
-            font-size: 11px; 
+            gap: 10px; 
+            margin-bottom: 12px; 
+            font-size: 12px; 
         }
         .acc-box { 
             background: #1a222d; 
-            padding: 8px; 
-            border-radius: 6px; 
+            padding: 10px; 
+            border-radius: 8px; 
             flex: 1; 
             text-align: center; 
         }
@@ -197,27 +211,27 @@
             background: #0d1117; 
             color: #fff; 
             border: 1px solid #363c4e; 
-            border-radius: 4px; 
-            padding: 2px 4px; 
+            border-radius: 6px; 
+            padding: 4px 6px; 
             width: 100%; 
-            margin-top: 4px; 
+            margin-top: 6px; 
             cursor: pointer;
         }
-        .profit-val { color: #00e676; font-weight: bold; font-size: 13px; }
-        .balance-val { color: #00e676; font-weight: bold; font-size: 13px; }
+        .profit-val { color: #00e676; font-weight: bold; font-size: 15px; }
+        .balance-val { color: #00e676; font-weight: bold; font-size: 15px; }
 
         /* Setup Buttons & Controls */
         .setup-btns { 
             display: flex; 
-            gap: 6px; 
-            margin-bottom: 10px; 
+            gap: 8px; 
+            margin-bottom: 12px; 
             align-items: center;
         }
 
         .asset-select, .strategy-select, .setup-btn {
             flex: 1;
-            height: 38px;
-            font-size: 10px;
+            height: 44px;
+            font-size: 12px;
             font-weight: 700;
             border-radius: 8px;
             border: 1px solid transparent;
@@ -229,7 +243,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            padding: 0 4px;
+            padding: 0 6px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
@@ -246,7 +260,7 @@
         .asset-select option, .strategy-select option {
             background: #121820;
             color: #fff;
-            padding: 8px;
+            padding: 10px;
         }
 
         .btn-green { 
@@ -278,24 +292,24 @@
             justify-content: space-between;
             align-items: center;
             background: #1a222d;
-            padding: 4px 8px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            font-size: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
             color: #8b9bb4;
         }
         .offset-btns {
             display: flex;
-            gap: 4px;
+            gap: 6px;
             align-items: center;
         }
         .offset-btns button {
             background: #2a3441;
             color: #fff;
             border: 1px solid #363c4e;
-            border-radius: 4px;
-            padding: 3px 8px;
-            font-size: 10px;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 11px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
@@ -312,34 +326,34 @@
         }
 
         .sub-note { 
-            font-size: 9px; 
+            font-size: 11px; 
             color: #8b9bb4; 
             text-align: center; 
-            margin-bottom: 10px; 
+            margin-bottom: 12px; 
         }
 
         /* Display Area */
         .display-area { 
             background: #18202c; 
-            border-radius: 8px; 
-            padding: 10px; 
-            margin-bottom: 10px; 
+            border-radius: 10px; 
+            padding: 14px; 
+            margin-bottom: 12px; 
         }
         .display-row { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            margin-bottom: 10px; 
+            margin-bottom: 12px; 
         }
         .price-box { 
-            font-size: 14px; 
+            font-size: 16px; 
             font-weight: bold; 
             display: flex; 
             flex-direction: column;
         }
         .crypto-icon {
             margin-right: 4px;
-            font-size: 12px;
+            font-size: 14px;
         }
         .btc-color { color: #f7931a; }
         .eth-color { color: #627eea; }
@@ -348,25 +362,25 @@
         .bnb-color { color: #f3ba2f; }
 
         .analyze-box { text-align: center; color: #00e676; font-weight: bold; }
-        .analyze-val { font-size: 20px; }
+        .analyze-val { font-size: 24px; }
         
         .winrate-box { text-align: right; color: #ff9800; font-weight: bold; }
-        .winrate-val { font-size: 14px; color: #ff9800; }
+        .winrate-val { font-size: 16px; color: #ff9800; }
 
         /* Signal Status Banner */
         .signal-status { 
             background: #1e293b; 
             text-align: center; 
-            padding: 12px; 
-            border-radius: 8px; 
+            padding: 16px; 
+            border-radius: 10px; 
             font-weight: bold; 
-            font-size: 14px; 
+            font-size: 16px; 
             letter-spacing: 0.5px; 
             color: #cbd5e1; 
-            margin-bottom: 10px; 
+            margin-bottom: 12px; 
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             border: 2px solid transparent; 
             transition: all 0.3s ease-in-out;
         }
@@ -383,14 +397,14 @@
         }
 
         .phase-tag {
-            font-size: 11px;
+            font-size: 12px;
             color: #29b6f6;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .signal-text-large {
-            font-size: 22px !important;
+            font-size: 26px !important;
             font-weight: 900 !important;
             letter-spacing: 1.5px !important;
             text-transform: uppercase;
@@ -399,47 +413,54 @@
         /* Action Button */
         .action-btn { 
             width: 100%; 
-            padding: 10px; 
+            padding: 14px; 
             color: white; 
             border: none; 
-            border-radius: 6px; 
+            border-radius: 8px; 
             font-weight: bold; 
+            font-size: 14px;
             cursor: pointer; 
             text-transform: uppercase; 
-            margin-bottom: 10px; 
+            margin-bottom: 12px; 
             transition: background 0.2s;
         }
         .btn-stop-state { background: #d50000; }
         .btn-start-state { background: #00c853; }
 
-        #history-wrapper { display: block; }
+        #history-wrapper { 
+            display: flex; 
+            flex-direction: column;
+            flex: 1;
+            min-height: 180px;
+        }
 
         .history-container {
-            max-height: 160px;
+            flex: 1;
             overflow-y: auto;
+            max-height: none;
         }
         .history-header { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 10px; 
-            margin-bottom: 6px; 
+            font-size: 11px; 
+            margin-bottom: 8px; 
             font-weight: bold; 
         }
         .history-table { 
             width: 100%; 
             border-collapse: collapse; 
-            font-size: 10px; 
+            font-size: 11px; 
             text-align: center; 
         }
         .history-table th { 
             color: #8b9bb4; 
-            padding: 4px; 
+            padding: 6px; 
             border-bottom: 1px solid #2a3441; 
             position: sticky;
             top: 0;
             background: #121820;
         }
-        .history-table td { padding: 5px 2px; }
+        .history-table td { padding: 8px 4px; }
         .order-buy { color: #00e676; font-weight: bold; }
         .order-sell { color: #ff5252; font-weight: bold; }
         .res-win { color: #00e676; font-weight: bold; }
@@ -471,8 +492,8 @@
             background: #18202c;
             border: 1px solid #2a3441;
             border-radius: 12px;
-            width: 320px;
-            padding: 20px;
+            width: 340px;
+            padding: 24px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             transform: scale(0.9);
@@ -480,19 +501,19 @@
         }
         .modal-overlay.active .modal-card { transform: scale(1); }
         .modal-icon {
-            font-size: 32px;
+            font-size: 36px;
             color: #ff5252;
             background: rgba(255, 82, 82, 0.1);
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
+            width: 64px;
+            height: 64px;
+            line-height: 64px;
             border-radius: 50%;
-            margin: 0 auto 12px auto;
+            margin: 0 auto 14px auto;
         }
-        .modal-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 6px; }
-        .modal-desc { font-size: 11px; color: #8b9bb4; line-height: 1.5; margin-bottom: 14px; }
+        .modal-title { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 8px; }
+        .modal-desc { font-size: 12px; color: #8b9bb4; line-height: 1.5; margin-bottom: 16px; }
         .modal-btns { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .modal-btn-confirm { background: #ff5252; color: #fff; }
         .modal-btn-cancel { background: #2a3441; color: #cbd5e1; }
     </style>
@@ -501,23 +522,25 @@
 
 <!-- Login Panel -->
 <div class="login-panel" id="login-panel">
-    <div class="login-logo"><i class="fa-solid fa-robot"></i></div>
-    <div class="login-title">XR AUTO BOT V1</div>
-    <div class="login-desc">ກະລຸນາເຂົ້າສູ່ລະບົບເພື່ອສືບຕໍ່</div>
-    
-    <div class="form-group">
-        <label>Username</label>
-        <input type="text" id="username-input" class="form-control" placeholder="ກະລຸນາໃສ່ຊື່ຜູ້ໃຊ້">
-    </div>
-    
-    <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="password-input" class="form-control" placeholder="ກະລຸນາໃສ່ລະຫັດຜ່ານ">
-    </div>
+    <div class="login-inner">
+        <div class="login-logo"><i class="fa-solid fa-robot"></i></div>
+        <div class="login-title">XR AUTO BOT V1</div>
+        <div class="login-desc">ກະລຸນາເຂົ້າສູ່ລະບົບເພື່ອສືບຕໍ່</div>
+        
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username-input" class="form-control" placeholder="ກະລຸນາໃສ່ຊື່ຜູ້ໃຊ້">
+        </div>
+        
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password-input" class="form-control" placeholder="ກະລຸນາໃສ່ລະຫັດຜ່ານ">
+        </div>
 
-    <div class="error-msg" id="login-error">ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານ ບໍ່ຖືກຕ້ອງ!</div>
-    
-    <button class="login-btn" id="login-submit-btn">ເຂົ້າສູ່ລະບົບ</button>
+        <div class="error-msg" id="login-error">ຊື່ຜູ້ໃຊ້ ຫຼື ລະຫັດຜ່ານ ບໍ່ຖືກຕ້ອງ!</div>
+        
+        <button class="login-btn" id="login-submit-btn">ເຂົ້າສູ່ລະບົບ</button>
+    </div>
 </div>
 
 <!-- Main Bot Panel -->
@@ -585,7 +608,7 @@
     </div>
 
     <!-- Fine-Tune Time Sync Control -->
-    <div class="offset-control" style="margin-top: 8px;">
+    <div class="offset-control">
         <span>⏱️ SYNC TIME (<span id="current-pair-label">BTC</span>): <b id="offset-val-text" style="color:#00e676;">-6s</b></span>
         <div class="offset-btns">
             <button id="btn-sub-sec">-1s</button>
@@ -604,11 +627,11 @@
                 <span id="asset-price" style="color:#fff;">$0.00</span>
             </div>
             <div class="analyze-box">
-                <span style="font-size:9px;">📊 CANDLE 30s</span><br>
+                <span style="font-size:10px;">📊 CANDLE 30s</span><br>
                 <span class="analyze-val" id="timer">30</span>
             </div>
             <div class="winrate-box">
-                <span style="font-size:9px;">WIN RATE</span><br>
+                <span style="font-size:10px;">WIN RATE</span><br>
                 <span class="winrate-val" id="win-rate">0.0%</span>
             </div>
         </div>
@@ -690,7 +713,7 @@
     const loginError = document.getElementById('login-error');
 
     function checkLoginStatus() {
-        loginPanel.style.display = 'block';
+        loginPanel.style.display = 'flex';
         botPanel.style.display = 'none';
     }
 
@@ -700,7 +723,7 @@
 
         if (user === '1111' && pass === '1111') {
             loginPanel.style.display = 'none';
-            botPanel.style.display = 'block';
+            botPanel.style.display = 'flex';
             loginError.style.display = 'none';
             
             usernameInput.value = '';
@@ -859,7 +882,7 @@
 
     toggleHistoryBtn.addEventListener('click', () => {
         if (historyWrapper.style.display === 'none') {
-            historyWrapper.style.display = 'block';
+            historyWrapper.style.display = 'flex';
         } else {
             historyWrapper.style.display = 'none';
         }
