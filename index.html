@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XR AUTO BOT V1</title>
+    <title>Signal-Trade</title>
     <!-- ໂຫຼດ FontAwesome ສຳລັບໄອຄອນ Crypto ແລະຖັງຂຍະ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -301,9 +301,9 @@
         }
 
         .asset-select, .strategy-select {
-            background: linear-gradient(135deg, #00c853 0%, #009624 100%);
+            background: #1a222d;
             color: #ffffff;
-            border: 1px solid #00e676;
+            border: 1px solid #363c4e;
             outline: none;
             appearance: none;
             -webkit-appearance: none;
@@ -315,17 +315,10 @@
             padding: 10px;
         }
 
-        .btn-green { 
-            background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%); 
-            color: #ffffff;
-            border: 1px solid #69f0ae;
-        }
-
-        .btn-red { 
-            background: linear-gradient(135deg, #ff1744 0%, #d50000 100%); 
-            color: #ffffff;
-            border: 1px solid #ff5252;
-            flex: 0.8;
+        .btn-neutral-custom { 
+            background: #1a222d !important; 
+            color: #ffffff !important;
+            border: 1px solid #363c4e !important;
         }
 
         .asset-select:hover, .strategy-select:hover, .setup-btn:hover {
@@ -369,12 +362,12 @@
         .offset-btns button:hover { background: #3a4759; }
 
         .btn-save-offset {
-            background: #00c853 !important;
+            background: #2a3441 !important;
             color: #fff !important;
-            border: none !important;
+            border: 1px solid #363c4e !important;
         }
         .btn-save-offset:hover {
-            background: #00e676 !important;
+            background: #3a4759 !important;
         }
 
         .sub-note { 
@@ -462,34 +455,17 @@
             text-transform: uppercase;
         }
 
-        /* Action Button */
-        .action-btn { 
-            width: 100%; 
-            padding: 14px; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            font-size: 14px;
-            cursor: pointer; 
-            text-transform: uppercase; 
-            margin-bottom: 12px; 
-            transition: background 0.2s;
-        }
-        .btn-stop-state { background: #d50000; }
-        .btn-start-state { background: #00c853; }
-
         #history-wrapper { 
             display: flex; 
             flex-direction: column;
             flex: 1;
-            min-height: 180px;
+            min-height: 220px;
         }
 
         .history-container {
             flex: 1;
             overflow-y: auto;
-            max-height: none;
+            max-height: 180px;
         }
         .history-header { 
             display: flex; 
@@ -518,6 +494,40 @@
         .res-win { color: #00e676; font-weight: bold; }
         .res-loss { color: #ff5252; font-weight: bold; }
         .res-draw { color: #9e9e9e; font-weight: bold; }
+
+        /* Pagination Styling */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            padding-bottom: 10px;
+        }
+        .page-btn {
+            background: #1a222d;
+            border: 1px solid #363c4e;
+            color: #cbd5e1;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .page-btn:hover {
+            background: #2a3441;
+            color: #fff;
+        }
+        .page-btn.active {
+            background: #00e676;
+            color: #0d1117;
+            border-color: #00e676;
+            font-weight: bold;
+        }
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         /* Modal */
         .modal-overlay {
@@ -576,7 +586,7 @@
 <div class="login-panel" id="login-panel">
     <div class="login-inner">
         <div class="login-logo"><i class="fa-solid fa-robot"></i></div>
-        <div class="login-title">XR AUTO BOT V1</div>
+        <div class="login-title">Signal-Trade</div>
         <div class="login-desc">ກະລຸນາເຂົ້າສູ່ລະບົບເພື່ອສືບຕໍ່</div>
         
         <div class="form-group">
@@ -599,7 +609,7 @@
 <div class="bot-panel" id="bot-panel">
     <!-- Header -->
     <div class="header">
-        <span>🤖 XR AUTO BOT V3</span>
+        <span>🤖 Signal-Trade</span>
         <div class="header-right">
             <!-- ປຸ່ມປ່ຽນມຸມມອງ (ມືຖື -> iPad -> ເຕັມຈໍ) -->
             <button class="view-mode-btn" id="view-mode-toggle-btn" title="ປ່ຽນມຸມມອງ">
@@ -626,9 +636,9 @@
             <span>CAPITAL ($)</span><br>
             <select id="capital-select">
                 <option value="1000">1,000</option>
+                <option value="2000" selected>2,000</option>
+                <option value="3000">3,000</option>
                 <option value="5000">5,000</option>
-                <option value="10000">10,000</option>
-                <option value="100000" selected>100,000</option>
             </select>
         </div>
         <div class="acc-box">
@@ -637,7 +647,7 @@
         </div>
         <div class="acc-box">
             <span>BALANCE</span><br>
-            <span class="balance-val" id="total-balance">$100,000.00</span>
+            <span class="balance-val" id="total-balance">$2,000.00</span>
         </div>
     </div>
 
@@ -651,7 +661,7 @@
             <option value="SOLUSDT">⚡ SOL/USDT</option>
         </select>
 
-        <button id="toggle-history-btn" class="setup-btn btn-green">📜 HISTORY</button>
+        <button id="toggle-history-btn" class="setup-btn btn-neutral-custom">📜 HISTORY</button>
         
         <select id="strategy-select" class="strategy-select">
             <option value="csdt30">🎯 csdt30</option>
@@ -660,7 +670,7 @@
             <option value="Reversal">🎯 Reversal</option>
         </select>
 
-        <button id="clear-btn" class="setup-btn btn-red" title="CLEAR HISTORY">🗑️ CLEAR</button>
+        <button id="clear-btn" class="setup-btn btn-neutral-custom" title="CLEAR HISTORY">🗑️ CLEAR</button>
     </div>
 
     <!-- Fine-Tune Time Sync Control -->
@@ -699,9 +709,6 @@
         </div>
     </div>
 
-    <!-- Action Button -->
-    <button id="toggle-btn" class="action-btn btn-stop-state">■ STOP BOT</button>
-
     <!-- History Wrapper -->
     <div id="history-wrapper">
         <div class="history-header">
@@ -726,6 +733,8 @@
                 </tbody>
             </table>
         </div>
+        <!-- Pagination Controls -->
+        <div class="pagination-container" id="pagination-controls"></div>
     </div>
 </div>
 
@@ -769,21 +778,17 @@
     viewModeToggleBtn.addEventListener('click', () => {
         viewModeState = (viewModeState + 1) % 3;
         
-        // Clear previous view classes
         document.body.classList.remove('mobile-view-active', 'tablet-view-active');
 
         if (viewModeState === 0) {
-            // ມຸມມອງມືຖື
             document.body.classList.add('mobile-view-active');
             viewModeIcon.className = 'fa-solid fa-tablet-screen-button';
             viewModeText.innerText = 'ມຸມມອງ iPad';
         } else if (viewModeState === 1) {
-            // ມຸມມອງ iPad
             document.body.classList.add('tablet-view-active');
             viewModeIcon.className = 'fa-solid fa-desktop';
             viewModeText.innerText = 'ມຸມມອງເຕັມຈໍ';
         } else {
-            // ມຸມມອງເຕັມຈໍ
             viewModeIcon.className = 'fa-solid fa-mobile-screen-button';
             viewModeText.innerText = 'ມຸມມອງມືຖື';
         }
@@ -806,7 +811,10 @@
         const user = usernameInput.value.trim();
         const pass = passwordInput.value.trim();
 
-        if (user === 'bananajo' && pass === '226463') {
+        if ((user === 'bananajo' && pass === '226463') || 
+            (user === 'jackha' && pass === '10216967') || 
+            (user === 'annadmk' && pass === '1111')) {
+            
             loginPanel.style.display = 'none';
             botPanel.style.display = 'flex';
             loginError.style.display = 'none';
@@ -830,6 +838,8 @@
     let currentStrategy = 'csdt30';
     let serverTimeOffset = 0;
     let isSoundEnabled = true;
+    let currentPage = 1;
+    const rowsPerPage = 10; // ຈຳນວນແຖວຕໍ່ 1 ໜ້າ
 
     let audioCtx = null;
     let audioUnlocked = false;
@@ -844,7 +854,6 @@
         return audioCtx;
     }
 
-    // ປົດລັອກສຽງສຳລັບ Mobile Browser (Safari / Chrome Mobile)
     function unlockMobileAudio() {
         if (audioUnlocked) return;
         try {
@@ -861,13 +870,11 @@
                 window.speechSynthesis.speak(utterance);
             }
             audioUnlocked = true;
-            console.log("Mobile Audio Unlocked Successfully.");
         } catch (e) {
             console.log("Unlock audio error:", e);
         }
     }
 
-    // ດັກຈັບທຸກການແຕະຫນ້າຈໍເພື່ອເປີດໃຊ້ສຽງ
     document.addEventListener('touchstart', unlockMobileAudio, { once: true });
     document.addEventListener('click', unlockMobileAudio, { once: true });
 
@@ -882,7 +889,7 @@
     };
 
     function loadSavedOffsets() {
-        const saved = localStorage.getItem('xr_bot_offsets');
+        const saved = localStorage.getItem('signal_trade_offsets');
         if (saved) {
             try {
                 return Object.assign({}, defaultPairOffsets, JSON.parse(saved));
@@ -969,9 +976,7 @@
 
     let initialBalance = parseFloat(capitalSelect.value);
     let timerInterval = null;
-    let isRunning = true;
 
-    const toggleBtn = document.getElementById('toggle-btn');
     const clearBtn = document.getElementById('clear-btn');
     const statusText = document.getElementById('status-text');
     const phaseText = document.getElementById('phase-text');
@@ -1006,7 +1011,6 @@
                 word = 'SELL';
             }
 
-            // 1. เล่นเสียง Beep แจ้งเตือน (Reliable & Immediate)
             const ctx = getAudioContext();
             const now = ctx.currentTime;
             const osc = ctx.createOscillator();
@@ -1022,7 +1026,6 @@
             osc.start(now);
             osc.stop(now + 0.3);
 
-            // 2. ໃຊ້ Web Speech API ພ້ອມກັບ Error Handling
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(`${word}! ${word}!`);
@@ -1030,8 +1033,7 @@
                 utterance.rate = 1.1;
                 utterance.volume = 1.0;
                 
-                utterance.onerror = (e) => {
-                    console.log("SpeechSynthesis error, using Audio fallback:", e);
+                utterance.onerror = () => {
                     playAudioFallback(word);
                 };
 
@@ -1039,7 +1041,6 @@
             } else {
                 playAudioFallback(word);
             }
-
         } catch (e) {
             console.log("Speech synthesis error:", e);
         }
@@ -1062,21 +1063,16 @@
         try {
             const ctx = getAudioContext();
             const now = ctx.currentTime;
-
             const notes = [523.25, 659.25, 783.99, 1046.50];
             notes.forEach((freq, idx) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
-                
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
-                
                 gain.gain.setValueAtTime(0.5, now + (idx * 0.08));
                 gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.08) + 0.25);
-                
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-                
                 osc.start(now + (idx * 0.08));
                 osc.stop(now + (idx * 0.08) + 0.25);
             });
@@ -1090,21 +1086,16 @@
         try {
             const ctx = getAudioContext();
             const now = ctx.currentTime;
-            
             const notes = [350, 300, 240, 180];
             notes.forEach((freq, idx) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
-                
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(freq, now + (idx * 0.12));
-                
                 gain.gain.setValueAtTime(0.4, now + (idx * 0.12));
                 gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.12) + 0.3);
-                
                 osc.connect(gain);
                 gain.connect(ctx.destination);
-                
                 osc.start(now + (idx * 0.12));
                 osc.stop(now + (idx * 0.12) + 0.3);
             });
@@ -1136,7 +1127,6 @@
         };
 
         socket.onclose = function () {
-            console.log("WebSocket Closed, Reconnecting...");
             setTimeout(connectAllWebSockets, 3000);
         };
     }
@@ -1148,6 +1138,54 @@
         currentPairLabel.innerText = label;
         historyPairLabel.innerText = label;
         historyStratLabel.innerText = currentStrategy;
+    }
+
+    function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        
+        const paginationContainer = document.getElementById('pagination-controls');
+        paginationContainer.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        // Previous Button
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'page-btn';
+        prevBtn.innerText = '‹';
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPairStats();
+            }
+        });
+        paginationContainer.appendChild(prevBtn);
+
+        // Page Number Buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+            pageBtn.innerText = i;
+            pageBtn.addEventListener('click', () => {
+                currentPage = i;
+                renderPairStats();
+            });
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        // Next Button
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'page-btn';
+        nextBtn.innerText = '›';
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPairStats();
+            }
+        });
+        paginationContainer.appendChild(nextBtn);
     }
 
     function renderPairStats() {
@@ -1176,7 +1214,12 @@
 
         const historyRows = document.getElementById('history-rows');
         historyRows.innerHTML = '';
-        data.history.forEach(item => {
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const paginatedHistory = data.history.slice(startIndex, endIndex);
+
+        paginatedHistory.forEach(item => {
             const tr = document.createElement('tr');
             
             let resultClass = 'res-win';
@@ -1204,10 +1247,13 @@
             `;
             historyRows.appendChild(tr);
         });
+
+        renderPagination(data.history.length);
     }
 
     pairSelect.addEventListener('change', (e) => {
         currentPair = e.target.value;
+        currentPage = 1;
         const pairLabel = currentPair.replace('USDT', '');
         
         let iconHtml = '';
@@ -1224,6 +1270,7 @@
 
     strategySelect.addEventListener('change', (e) => {
         currentStrategy = e.target.value;
+        currentPage = 1;
         updateOffsetDisplay();
         renderPairStats();
     });
@@ -1238,7 +1285,7 @@
     });
 
     document.getElementById('btn-save-offset').addEventListener('click', () => {
-        localStorage.setItem('xr_bot_offsets', JSON.stringify(pairOffsets));
+        localStorage.setItem('signal_trade_offsets', JSON.stringify(pairOffsets));
         const saveBtn = document.getElementById('btn-save-offset');
         const oldText = saveBtn.innerText;
         saveBtn.innerText = '✅ SAVED!';
@@ -1352,10 +1399,6 @@
         timerInterval = setInterval(updateSyncTimer, 200);
     }
 
-    function stopTimer() {
-        clearInterval(timerInterval);
-    }
-
     function addTradeHistory(pair, strat, orderType, entry, close) {
         if (entry === 0) entry = close;
         
@@ -1443,11 +1486,11 @@
 
     modalConfirmBtn.addEventListener('click', () => {
         tradeData[currentPair][currentStrategy] = createEmptyData(currentStrategy);
+        currentPage = 1;
         renderPairStats();
         closeClearModal();
     });
 
-    // Logout Modal Logic
     logoutBtn.addEventListener('click', () => {
         logoutModal.classList.add('active');
     });
@@ -1463,7 +1506,7 @@
     });
 
     logoutConfirmBtn.addEventListener('click', () => {
-        stopTimer();
+        clearInterval(timerInterval);
         closeLogoutModal();
         checkLoginStatus();
     });
@@ -1476,33 +1519,6 @@
     }
 
     checkLoginStatus();
-
-    toggleBtn.addEventListener('click', () => {
-        unlockMobileAudio();
-        if (isRunning) {
-            stopTimer();
-            isRunning = false;
-            toggleBtn.innerText = '▶ START BOT';
-            toggleBtn.classList.remove('btn-stop-state');
-            toggleBtn.classList.add('btn-start-state');
-            statusText.innerText = 'BOT STOPPED';
-            statusText.classList.remove('signal-text-large');
-            statusText.style.color = '#ff5252';
-            phaseText.innerText = 'BOT PAUSED';
-            phaseText.style.color = '#8b9bb4';
-
-            signalStatusElem.classList.remove('bg-buy', 'bg-sell');
-        } else {
-            startTimer();
-            isRunning = true;
-            toggleBtn.innerText = '■ STOP BOT';
-            toggleBtn.classList.remove('btn-start-state');
-            toggleBtn.classList.add('btn-stop-state');
-            statusText.innerText = '⏳ ກຳລັງວີເຄາະ...';
-            statusText.classList.add('signal-text-large');
-            statusText.style.color = '#f59e0b';
-        }
-    });
 </script>
 
 </body>
