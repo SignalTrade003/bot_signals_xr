@@ -44,29 +44,40 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.8) !important;
         }
 
-        /* Floating View Mode Switcher Button */
+        /* Responsive Wrapper Frame for Tablet (iPad) View Mode */
+        body.tablet-view-active {
+            background-color: #05070a !important;
+        }
+        body.tablet-view-active .login-panel,
+        body.tablet-view-active .bot-panel {
+            max-width: 768px !important;
+            height: 1024px !important;
+            max-height: 95vh !important;
+            border-radius: 28px !important;
+            border: 8px solid #2a3441 !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8) !important;
+        }
+
+        /* View Mode Switcher Button (Header Style) */
         .view-mode-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #00b0ff 0%, #00e676 100%);
-            color: #000;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 18px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            z-index: 9999;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: #1a222d;
+            border: 1px solid #363c4e;
+            color: #00e676;
+            border-radius: 6px;
+            height: 34px;
+            padding: 0 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.2s;
         }
         .view-mode-btn:hover {
-            transform: translateY(-2px);
             filter: brightness(1.1);
+            border-color: #00e676;
         }
 
         /* Login Container - ເຕັມຈໍແລະຈັດກຶ່ງາງ */
@@ -561,11 +572,6 @@
 </head>
 <body>
 
-<!-- Floating View Mode Switcher Button -->
-<button class="view-mode-btn" id="view-mode-toggle-btn">
-    <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon"></i> <span id="view-mode-text">ມຸມມອງມືຖື</span>
-</button>
-
 <!-- Login Panel -->
 <div class="login-panel" id="login-panel">
     <div class="login-inner">
@@ -595,6 +601,10 @@
     <div class="header">
         <span>🤖 XR AUTO BOT V3</span>
         <div class="header-right">
+            <!-- ປຸ່ມປ່ຽນມຸມມອງ (ມືຖື -> iPad -> ເຕັມຈໍ) -->
+            <button class="view-mode-btn" id="view-mode-toggle-btn" title="ປ່ຽນມຸມມອງ">
+                <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon"></i> <span id="view-mode-text">ມຸມມອງມືຖື</span>
+            </button>
             <button id="sound-toggle-btn" class="sound-toggle-btn" title="ເປີດ/ປິດ ສຽງ">🔊</button>
             <span class="close-btn" id="logout-btn" title="ອອກຈາກລະບົບ">❌</span>
         </div>
@@ -750,20 +760,30 @@
 </div>
 
 <script>
-    // View Mode Toggle Logic (Mobile Screen Frame View)
+    // View Mode Toggle Logic (Mobile -> iPad -> Fullscreen)
     const viewModeToggleBtn = document.getElementById('view-mode-toggle-btn');
     const viewModeIcon = document.getElementById('view-mode-icon');
     const viewModeText = document.getElementById('view-mode-text');
-    let isMobileView = false;
+    let viewModeState = 0; // 0: ມືຖື, 1: iPad, 2: ເຕັມຈໍ
 
     viewModeToggleBtn.addEventListener('click', () => {
-        isMobileView = !isMobileView;
-        if (isMobileView) {
+        viewModeState = (viewModeState + 1) % 3;
+        
+        // Clear previous view classes
+        document.body.classList.remove('mobile-view-active', 'tablet-view-active');
+
+        if (viewModeState === 0) {
+            // ມຸມມອງມືຖື
             document.body.classList.add('mobile-view-active');
+            viewModeIcon.className = 'fa-solid fa-tablet-screen-button';
+            viewModeText.innerText = 'ມຸມມອງ iPad';
+        } else if (viewModeState === 1) {
+            // ມຸມມອງ iPad
+            document.body.classList.add('tablet-view-active');
             viewModeIcon.className = 'fa-solid fa-desktop';
             viewModeText.innerText = 'ມຸມມອງເຕັມຈໍ';
         } else {
-            document.body.classList.remove('mobile-view-active');
+            // ມຸມມອງເຕັມຈໍ
             viewModeIcon.className = 'fa-solid fa-mobile-screen-button';
             viewModeText.innerText = 'ມຸມມອງມືຖື';
         }
@@ -986,6 +1006,7 @@
                 word = 'SELL';
             }
 
+            // 1. เล่นเสียง Beep แจ้งเตือน (Reliable & Immediate)
             const ctx = getAudioContext();
             const now = ctx.currentTime;
             const osc = ctx.createOscillator();
@@ -994,31 +1015,45 @@
             osc.type = 'sine';
             osc.frequency.setValueAtTime(word === 'BUY' ? 1000 : 500, now); 
             gain.gain.setValueAtTime(0.8, now);      
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
             
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start(now);
-            osc.stop(now + 0.2);
+            osc.stop(now + 0.3);
 
-            // ໃຊ້ Web Speech API ເປັນຫຼັກ ເພາະຮອງຮັບມືຖືໄດ້ດີທີ່ສຸດ ແລະບໍ່ຕິດ CORS
+            // 2. ໃຊ້ Web Speech API ພ້ອມກັບ Error Handling
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(`${word}! ${word}!`);
                 utterance.lang = 'en-US';
                 utterance.rate = 1.1;
                 utterance.volume = 1.0;
+                
+                utterance.onerror = (e) => {
+                    console.log("SpeechSynthesis error, using Audio fallback:", e);
+                    playAudioFallback(word);
+                };
+
                 window.speechSynthesis.speak(utterance);
             } else {
-                const textToSpeak = encodeURIComponent(`${word}, ${word}`);
-                const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${textToSpeak}&tl=en&client=tw-ob`;
-                const audio = new Audio(audioUrl);
-                audio.volume = 1.0;
-                audio.play().catch(e => console.log("Audio play fallback error:", e));
+                playAudioFallback(word);
             }
 
         } catch (e) {
             console.log("Speech synthesis error:", e);
+        }
+    }
+
+    function playAudioFallback(word) {
+        try {
+            const textToSpeak = encodeURIComponent(`${word}, ${word}`);
+            const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${textToSpeak}&tl=en&client=tw-ob`;
+            const audio = new Audio(audioUrl);
+            audio.volume = 1.0;
+            audio.play().catch(err => console.log("Audio fallback play error:", err));
+        } catch (err) {
+            console.log("Fallback error:", err);
         }
     }
 
