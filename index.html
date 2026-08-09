@@ -321,6 +321,42 @@
             border: 1px solid #363c4e !important;
         }
 
+        /* ສີປຸ່ມຕາມທີ່ຕ້ອງການ */
+        .asset-select {
+            background: #ffb300 !important;
+            color: #000000 !important;
+            border-color: #ffa000 !important;
+            text-shadow: none !important;
+        }
+        .asset-select option {
+            background: #121820;
+            color: #fff;
+        }
+
+        #toggle-history-btn {
+            background: #00e676 !important;
+            color: #000000 !important;
+            border-color: #00c853 !important;
+            text-shadow: none !important;
+        }
+
+        .strategy-select {
+            background: #00e676 !important;
+            color: #000000 !important;
+            border-color: #00c853 !important;
+            text-shadow: none !important;
+        }
+        .strategy-select option {
+            background: #121820;
+            color: #fff;
+        }
+
+        #clear-btn {
+            background: #ff5252 !important;
+            color: #ffffff !important;
+            border-color: #d50000 !important;
+        }
+
         .asset-select:hover, .strategy-select:hover, .setup-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
@@ -664,8 +700,9 @@
         <button id="toggle-history-btn" class="setup-btn btn-neutral-custom">📜 HISTORY</button>
         
         <select id="strategy-select" class="strategy-select">
-            <option value="csdt30">🎯 csdt30</option>
+            <option value="csdt30" selected>🎯 csdt30</option>
             <option value="ccauto">🎯 ccauto</option>
+            <option value="FSS">🎯 FSS</option>
             <option value="FollowTrend">🎯 Follow Trend</option>
             <option value="Reversal">🎯 Reversal</option>
         </select>
@@ -811,7 +848,7 @@
         const user = usernameInput.value.trim();
         const pass = passwordInput.value.trim();
 
-        if ((user === 'bananajo' && pass === '226463') || 
+        if ((user === 'bananajo' && pass === '1111') || 
             (user === 'jackha' && pass === '10216967') || 
             (user === 'seesouk' && pass === '226463') || 
             (user === 'annadmk' && pass === '1111')) {
@@ -941,7 +978,7 @@
         };
     }
 
-    const strategiesList = ['csdt30', 'ccauto', 'FollowTrend', 'Reversal'];
+    const strategiesList = ['csdt30', 'ccauto', 'FSS', 'FollowTrend', 'Reversal'];
     const tradeData = {};
 
     supportedPairs.forEach(pair => {
@@ -953,6 +990,7 @@
 
     const pairSelect = document.getElementById('pair-select');
     const strategySelect = document.getElementById('strategy-select');
+    strategySelect.value = 'csdt30';
     const priceTitle = document.getElementById('price-title');
     const assetPriceElem = document.getElementById('asset-price');
     const offsetValText = document.getElementById('offset-val-text');
@@ -1322,6 +1360,20 @@
                     else if (strat === 'ccauto') {
                         data.currentSignal = 'SELL';
                     }
+                    else if (strat === 'FSS') {
+                        if (data.totalOrd > 0) {
+                            if (data.lastResultStatus === 'WIN') {
+                                // ຖ້າຊະນະ: ປ່ຽນທາງ (buy -> sell, sell -> buy)
+                                data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
+                            } else if (data.lastResultStatus === 'LOSS') {
+                                // ຖ້າເສຍ: ໄປທາງເກົ່າ (คงเดิม)
+                                // data.currentSignal ຍັງຄົງຮັກສາຄ່າเดิมໄວ້
+                            } else if (data.lastResultStatus === 'DRAW') {
+                                // ຖ້າສະເໝີ: ໄປທາງເກົ່າ (คงเดิม)
+                                // data.currentSignal ຍັງຄົງຮັກສາຄ່າเดิมໄວ້
+                            }
+                        }
+                    }
 
                     data.entryPrice = currentPrice;
                 }
@@ -1508,11 +1560,20 @@
 
     logoutConfirmBtn.addEventListener('click', () => {
         clearInterval(timerInterval);
+        
+        // ເມື່ອ Logout ໃຫ້ reset ຄ່າເລີ່ມຕົ້ນກັບຄືນມາເປັນ csdt30
+        currentStrategy = 'csdt30';
+        strategySelect.value = 'csdt30';
+
         closeLogoutModal();
         checkLoginStatus();
     });
 
     function initBot() {
+        // ຕັ້ງຄ່າເລີ່ມຕົ້ນໃຫ້ເປັນ csdt30 ທຸກຄັ້ງທີ່ Login ເຂົ້າມາໃໝ່
+        currentStrategy = 'csdt30';
+        strategySelect.value = 'csdt30';
+
         connectAllWebSockets();
         updateOffsetDisplay();
         renderPairStats();
