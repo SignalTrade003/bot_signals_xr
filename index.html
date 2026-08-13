@@ -491,8 +491,9 @@
             text-transform: uppercase;
         }
 
+        /* History Wrapper (ຊ່ອນໄວ້ເປັນຄ່າເລີ່ມຕົ້ນ) */
         #history-wrapper { 
-            display: flex; 
+            display: none; 
             flex-direction: column;
             flex: 1;
             min-height: 220px;
@@ -647,7 +648,7 @@
     <div class="header">
         <span>🤖 Signal-Trade</span>
         <div class="header-right">
-            <!-- ປຸ່ມປ່ຽນມຸມມອງ (ມືຖື -> iPad -> ເຕັມຈໍ) -->
+            <!-- ປຸ່ມປ່ຽນມຸມມອງ (ມືຖື -> iPad -> ເເຕັມຈໍ) -->
             <button class="view-mode-btn" id="view-mode-toggle-btn" title="ປ່ຽນມຸມມອງ">
                 <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon"></i> <span id="view-mode-text">ມຸມມອງມືຖື</span>
             </button>
@@ -701,7 +702,6 @@
         
         <select id="strategy-select" class="strategy-select">
             <option value="csdt30" selected>🎯 csdt30</option>
-            <option value="ccauto">🎯 ccauto</option>
             <option value="FSS">🎯 FSS</option>
             <option value="FollowTrend">🎯 Follow Trend</option>
             <option value="Reversal">🎯 Reversal</option>
@@ -956,7 +956,7 @@
         return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function createEmptyData(strat = '') {
+    function createEmptyData() {
         return {
             totalOrd: 0,
             totalWin: 0,
@@ -968,7 +968,7 @@
             currentStreakLoss: 0,
             profitLoss: 0,
             history: [],
-            currentSignal: strat === 'ccauto' ? 'SELL' : 'BUY',
+            currentSignal: 'BUY',
             lastResultStatus: 'WIN',
             entryPrice: 0,
             lastHandledSecond: -1,
@@ -978,13 +978,13 @@
         };
     }
 
-    const strategiesList = ['csdt30', 'ccauto', 'FSS', 'FollowTrend', 'Reversal'];
+    const strategiesList = ['csdt30', 'FSS', 'FollowTrend', 'Reversal'];
     const tradeData = {};
 
     supportedPairs.forEach(pair => {
         tradeData[pair] = {};
         strategiesList.forEach(strat => {
-            tradeData[pair][strat] = createEmptyData(strat);
+            tradeData[pair][strat] = createEmptyData();
         });
     });
 
@@ -1033,8 +1033,9 @@
     const toggleHistoryBtn = document.getElementById('toggle-history-btn');
     const historyWrapper = document.getElementById('history-wrapper');
 
+    // ສະຫຼັບການສະແດງ/ຊ່ອນ ປະຫວັດການເທຣດ
     toggleHistoryBtn.addEventListener('click', () => {
-        if (historyWrapper.style.display === 'none') {
+        if (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') {
             historyWrapper.style.display = 'flex';
         } else {
             historyWrapper.style.display = 'none';
@@ -1357,20 +1358,14 @@
                             data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
                         }
                     } 
-                    else if (strat === 'ccauto') {
-                        data.currentSignal = 'SELL';
-                    }
                     else if (strat === 'FSS') {
                         if (data.totalOrd > 0) {
                             if (data.lastResultStatus === 'WIN') {
-                                // ຖ້າຊະນະ: ປ່ຽນທາງ (buy -> sell, sell -> buy)
                                 data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
                             } else if (data.lastResultStatus === 'LOSS') {
-                                // ຖ້າເສຍ: ໄປທາງເກົ່າ (คงเดิม)
-                                // data.currentSignal ຍັງຄົງຮັກສາຄ່າเดิมໄວ້
+                                // ຖ້າເສຍ: ໄປທາງເກົ່າ
                             } else if (data.lastResultStatus === 'DRAW') {
-                                // ຖ້າສະເໝີ: ໄປທາງເກົ່າ (คงเดิม)
-                                // data.currentSignal ຍັງຄົງຮັກສາຄ່າเดิมໄວ້
+                                // ຖ້າສະເໝີ: ໄປທາງເກົ່າ
                             }
                         }
                     }
@@ -1538,7 +1533,7 @@
     });
 
     modalConfirmBtn.addEventListener('click', () => {
-        tradeData[currentPair][currentStrategy] = createEmptyData(currentStrategy);
+        tradeData[currentPair][currentStrategy] = createEmptyData();
         currentPage = 1;
         renderPairStats();
         closeClearModal();
@@ -1561,7 +1556,6 @@
     logoutConfirmBtn.addEventListener('click', () => {
         clearInterval(timerInterval);
         
-        // ເມື່ອ Logout ໃຫ້ reset ຄ່າເລີ່ມຕົ້ນກັບຄືນມາເປັນ csdt30
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
 
@@ -1570,7 +1564,6 @@
     });
 
     function initBot() {
-        // ຕັ້ງຄ່າເລີ່ມຕົ້ນໃຫ້ເປັນ csdt30 ທຸກຄັ້ງທີ່ Login ເຂົ້າມາໃໝ່
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
 
@@ -1584,4 +1577,4 @@
 </script>
 
 </body>
-</html>
+</html> 
