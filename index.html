@@ -13,6 +13,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: #121820;
+            --card-bg: #1a222d;
+            --display-bg: #18202c;
+            --text-color: #ffffff;
+            --text-sub: #8b9bb4;
+            --border-color: #363c4e;
+            --border-light: #2a3441;
+            --input-bg: #0d1117;
+            --modal-bg: #18202c;
+            --table-header-bg: #121820;
+            --badge-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            --metrics-bg: #111822;
+            --status-bg: #1e293b;
+            --status-text: #cbd5e1;
+        }
+
+        /* ປັບປຸງ Light Theme ໃຫ້ສະບາຍຕາ (Eye-friendly Soft Light Theme) */
+        body.light-theme {
+            --bg-color: #e5e9f0;           /* ສີພື້ນຫຼັງຫຼັກນຸ່ມນວນ */
+            --panel-bg: #f4f6f9;          /* ສີ Panel ນວນຕາ ບໍ່ຂາວຈ້າ */
+            --card-bg: #eaeff5;           /* ສີ Card Soft Tone */
+            --display-bg: #eef2f7;        /* ສີ Display Soft Soft Tone */
+            --text-color: #1e293b;        /* ສີຕົວໜັງສືເຂັ້ມ ອ່ານງ່າຍ ຄົມຊັດ */
+            --text-sub: #526075;          /* ສີຕົວໜັງສືຮອງ ເບິ່ງຊັດເຈນ */
+            --border-color: #cbd5e1;      /* เส้นขอบนุ่มนวล */
+            --border-light: #dbe2ec;
+            --input-bg: #f8fafc;
+            --modal-bg: #f8fafc;
+            --table-header-bg: #e2e8f0;
+            --badge-bg: linear-gradient(135deg, #e2e8f0 0%, #dbe2ec 100%);
+            --metrics-bg: #e5eaf1;
+            --status-bg: #dbe2ec;
+            --status-text: #1e293b;
+        }
+
         * { 
             box-sizing: border-box; 
             font-family: 'Noto Sans Lao', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -22,17 +59,21 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #0d1117; 
-            color: #fff; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
             display: flex; 
             justify-content: center; 
             align-items: center;     
             overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         /* Responsive Wrapper Frame for Mobile View Mode */
         body.mobile-view-active {
             background-color: #05070a !important;
+        }
+        body.light-theme.mobile-view-active {
+            background-color: #cbd5e1 !important;
         }
         body.mobile-view-active .login-panel,
         body.mobile-view-active .bot-panel {
@@ -40,13 +81,16 @@
             height: 850px !important;
             max-height: 92vh !important;
             border-radius: 28px !important;
-            border: 8px solid #2a3441 !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8) !important;
+            border: 8px solid var(--border-color) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
         }
 
         /* Responsive Wrapper Frame for Tablet (iPad) View Mode */
         body.tablet-view-active {
             background-color: #05070a !important;
+        }
+        body.light-theme.tablet-view-active {
+            background-color: #cbd5e1 !important;
         }
         body.tablet-view-active .login-panel,
         body.tablet-view-active .bot-panel {
@@ -54,15 +98,15 @@
             height: 1024px !important;
             max-height: 95vh !important;
             border-radius: 28px !important;
-            border: 8px solid #2a3441 !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8) !important;
+            border: 8px solid var(--border-color) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
         }
 
         /* View Mode Switcher Button (Header Style) */
-        .view-mode-btn {
-            background: #1a222d;
-            border: 1px solid #363c4e;
-            color: #00e676;
+        .header-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: #059669;
             border-radius: 6px;
             height: 34px;
             padding: 0 10px;
@@ -75,17 +119,33 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .view-mode-btn:hover {
-            filter: brightness(1.1);
-            border-color: #00e676;
+        .header-btn:hover {
+            filter: brightness(1.05);
+            border-color: #10b981;
         }
 
-        /* Login Container - ເຕັມຈໍແລະຈັດກຶ່ງາງ */
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: #d97706;
+            border-radius: 6px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        /* Login Container */
         .login-panel {
             width: 100%;
             height: 100%;
             max-width: none;
-            background-color: #121820;
+            background-color: var(--panel-bg);
             border: none;
             border-radius: 0;
             padding: 24px;
@@ -104,16 +164,17 @@
         .login-logo {
             font-size: 48px;
             margin-bottom: 12px;
-            color: #00e676;
+            color: #059669;
         }
         .login-title {
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 6px;
+            color: var(--text-color);
         }
         .login-desc {
             font-size: 13px;
-            color: #8b9bb4;
+            color: var(--text-sub);
             margin-bottom: 24px;
         }
         .form-group {
@@ -123,14 +184,15 @@
         .form-group label {
             display: block;
             font-size: 12px;
-            color: #8b9bb4;
+            color: var(--text-sub);
             margin-bottom: 6px;
+            font-weight: 600;
         }
         .form-control {
             width: 100%;
-            background: #0d1117;
-            color: #fff;
-            border: 1px solid #363c4e;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px 14px;
             font-size: 14px;
@@ -138,11 +200,11 @@
             transition: border-color 0.2s;
         }
         .form-control:focus {
-            border-color: #00e676;
+            border-color: #059669;
         }
         .login-btn {
             width: 100%;
-            background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
+            background: linear-gradient(135deg, #059669 0%, #0284c7 100%);
             color: #ffffff;
             border: none;
             border-radius: 8px;
@@ -152,26 +214,27 @@
             cursor: pointer;
             text-transform: uppercase;
             margin-top: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: all 0.2s;
         }
         .login-btn:hover {
-            filter: brightness(1.1);
+            filter: brightness(1.05);
             transform: translateY(-1px);
         }
         .error-msg {
-            color: #ff5252;
+            color: #dc2626;
             font-size: 12px;
             margin-top: 10px;
             display: none;
+            font-weight: 600;
         }
 
-        /* Main Bot Panel - ຂຍາຍເຕັມຈໍ 100% ທັງຄວາມກວ້າງ ແລະຄວາມສູງ */
+        /* Main Bot Panel */
         .bot-panel {
             width: 100%;            
             height: 100%;            
             max-width: none;         
-            background-color: #121820;
+            background-color: var(--panel-bg);
             border: none;
             border-radius: 0;
             padding: 16px;
@@ -191,6 +254,7 @@
             font-size: 16px; 
             font-weight: bold; 
             margin-bottom: 12px; 
+            color: var(--text-color);
         }
         .header-right {
             display: flex;
@@ -198,9 +262,9 @@
             gap: 8px;
         }
         .sound-toggle-btn {
-            background: #1a222d;
-            border: 1px solid #363c4e;
-            color: #00e676;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: #059669;
             border-radius: 6px;
             width: 34px;
             height: 34px;
@@ -212,11 +276,11 @@
             transition: all 0.2s;
         }
         .sound-toggle-btn.muted {
-            color: #ff5252;
-            border-color: #552222;
+            color: #dc2626;
+            border-color: #fca5a5;
         }
         .close-btn { 
-            color: #ff5252; 
+            color: #dc2626; 
             cursor: pointer; 
             font-size: 16px; 
             width: 34px;
@@ -224,8 +288,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #1a222d;
-            border: 1px solid #363c4e;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
         }
 
@@ -234,15 +298,17 @@
             display: flex; 
             justify-content: space-between; 
             font-size: 12px; 
-            background: #1a222d; 
+            background: var(--card-bg); 
             padding: 10px 14px; 
             border-radius: 8px; 
             margin-bottom: 12px; 
+            color: var(--text-color);
+            border: 1px solid var(--border-light);
         }
-        .stats-top span { color: #8b9bb4; }
-        .val-win { color: #00e676; font-weight: bold; }
-        .val-loss { color: #ff5252; font-weight: bold; }
-        .val-draw { color: #9e9e9e; font-weight: bold; }
+        .stats-top span { color: var(--text-sub); }
+        .val-win { color: #16a34a; font-weight: bold; }
+        .val-loss { color: #dc2626; font-weight: bold; }
+        .val-draw { color: #64748b; font-weight: bold; }
 
         /* Capital & Balance Box */
         .account-info { 
@@ -253,24 +319,28 @@
             font-size: 12px; 
         }
         .acc-box { 
-            background: #1a222d; 
+            background: var(--card-bg); 
             padding: 10px; 
             border-radius: 8px; 
             flex: 1; 
             text-align: center; 
+            color: var(--text-sub);
+            border: 1px solid var(--border-light);
+            font-weight: 600;
         }
         .acc-box select { 
-            background: #0d1117; 
-            color: #fff; 
-            border: 1px solid #363c4e; 
+            background: var(--input-bg); 
+            color: var(--text-color); 
+            border: 1px solid var(--border-color); 
             border-radius: 6px; 
             padding: 4px 6px; 
             width: 100%; 
             margin-top: 6px; 
             cursor: pointer;
+            font-weight: bold;
         }
-        .profit-val { color: #00e676; font-weight: bold; font-size: 15px; }
-        .balance-val { color: #00e676; font-weight: bold; font-size: 15px; }
+        .profit-val { color: #16a34a; font-weight: bold; font-size: 15px; }
+        .balance-val { color: #16a34a; font-weight: bold; font-size: 15px; }
 
         /* Setup Buttons & Controls */
         .setup-btns { 
@@ -296,75 +366,58 @@
             overflow: hidden;
             text-overflow: ellipsis;
             padding: 0 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .asset-select, .strategy-select {
-            background: #1a222d;
-            color: #ffffff;
-            border: 1px solid #363c4e;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             outline: none;
             appearance: none;
             -webkit-appearance: none;
             text-align-last: center;
         }
         .asset-select option, .strategy-select option {
-            background: #121820;
-            color: #fff;
+            background: var(--panel-bg);
+            color: var(--text-color);
             padding: 10px;
         }
 
         .btn-neutral-custom { 
-            background: #1a222d !important; 
-            color: #ffffff !important;
-            border: 1px solid #363c4e !important;
+            background: var(--card-bg) !important; 
+            color: var(--text-color) !important;
+            border: 1px solid var(--border-color) !important;
         }
 
-        /* ສີປຸ່ມຕາມທີ່ຕ້ອງການ */
         .asset-select {
-            background: #ffb300 !important;
-            color: #000000 !important;
-            border-color: #ffa000 !important;
-            text-shadow: none !important;
-        }
-        .asset-select option {
-            background: #121820;
-            color: #fff;
+            background: #f59e0b !important;
+            color: #ffffff !important;
+            border-color: #d97706 !important;
         }
 
         #toggle-history-btn {
-            background: #00e676 !important;
-            color: #000000 !important;
-            border-color: #00c853 !important;
-            text-shadow: none !important;
+            background: #10b981 !important;
+            color: #ffffff !important;
+            border-color: #059669 !important;
         }
 
         .strategy-select {
-            background: #00e676 !important;
-            color: #000000 !important;
-            border-color: #00c853 !important;
-            text-shadow: none !important;
-        }
-        .strategy-select option {
-            background: #121820;
-            color: #fff;
+            background: #10b981 !important;
+            color: #ffffff !important;
+            border-color: #059669 !important;
         }
 
         #clear-btn {
-            background: #ff5252 !important;
+            background: #ef4444 !important;
             color: #ffffff !important;
-            border-color: #d50000 !important;
+            border-color: #dc2626 !important;
         }
 
         .asset-select:hover, .strategy-select:hover, .setup-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            filter: brightness(1.1);
-        }
-        .asset-select:active, .strategy-select:active, .setup-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            filter: brightness(1.05);
         }
 
         /* Offset Controller */
@@ -372,12 +425,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1a222d;
+            background: var(--card-bg);
             padding: 8px 12px;
             border-radius: 8px;
             margin-bottom: 10px;
             font-size: 12px;
-            color: #8b9bb4;
+            color: var(--text-sub);
+            border: 1px solid var(--border-light);
+            font-weight: 600;
         }
         .offset-btns {
             display: flex;
@@ -385,9 +440,9 @@
             align-items: center;
         }
         .offset-btns button {
-            background: #2a3441;
-            color: #fff;
-            border: 1px solid #363c4e;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 5px 10px;
             font-size: 11px;
@@ -395,70 +450,169 @@
             font-weight: bold;
             transition: all 0.2s;
         }
-        .offset-btns button:hover { background: #3a4759; }
 
         .btn-save-offset {
-            background: #2a3441 !important;
-            color: #fff !important;
-            border: 1px solid #363c4e !important;
-        }
-        .btn-save-offset:hover {
-            background: #3a4759 !important;
+            background: var(--border-color) !important;
+            color: var(--text-color) !important;
         }
 
         .sub-note { 
             font-size: 11px; 
-            color: #8b9bb4; 
+            color: var(--text-sub); 
             text-align: center; 
             margin-bottom: 12px; 
+            font-weight: 600;
         }
 
         /* Display Area */
         .display-area { 
-            background: #18202c; 
-            border-radius: 10px; 
+            background: var(--display-bg); 
+            border-radius: 12px; 
             padding: 14px; 
             margin-bottom: 12px; 
+            border: 1px solid var(--border-light);
         }
-        .display-row { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 12px; 
+
+        .graph-badge-box {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: var(--badge-bg);
+            border: 1px solid #3b82f6;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 12px;
         }
-        .price-box { 
-            font-size: 16px; 
-            font-weight: bold; 
-            display: flex; 
+        .graph-badge-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #3b82f6;
+        }
+        .price-box-left {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 14px;
+        }
+        .crypto-icon-wrap {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(125,125,125,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+        .price-box-info {
+            display: flex;
             flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
         }
-        .crypto-icon {
-            margin-right: 4px;
-            font-size: 14px;
+        .price-box-right {
+            text-align: right;
         }
+        .pair-title-text {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        #asset-price {
+            color: #10b981 !important;
+            font-weight: 900 !important;
+            font-size: 28px !important;
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
+
+        /* CANDLE 30s ແລະ WIN RATE */
+        .metrics-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: var(--metrics-bg);
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .analyze-box, .winrate-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .analyze-box span:first-child, 
+        .winrate-box span:first-child {
+            font-size: 14px !important;
+            font-weight: bold;
+            color: var(--text-sub);
+        }
+
+        .analyze-val { 
+            font-size: 36px !important; 
+            font-weight: 900;
+            color: #10b981; 
+            line-height: 1.2;
+        }
+
+        .winrate-val { 
+            font-size: 36px !important; 
+            font-weight: 900;
+            color: #f59e0b; 
+            line-height: 1.2;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         .btc-color { color: #f7931a; }
         .eth-color { color: #627eea; }
-        .sui-color { color: #4da2ff; }
-        .sol-color { color: #14f195; }
-        .bnb-color { color: #f3ba2f; }
-
-        .analyze-box { text-align: center; color: #00e676; font-weight: bold; }
-        .analyze-val { font-size: 24px; }
-        
-        .winrate-box { text-align: right; color: #ff9800; font-weight: bold; }
-        .winrate-val { font-size: 16px; color: #ff9800; }
+        .sui-color { color: #0284c7; }
+        .sol-color { color: #10b981; }
+        .bnb-color { color: #d97706; }
 
         /* Signal Status Banner */
         .signal-status { 
-            background: #1e293b; 
+            background: var(--status-bg); 
             text-align: center; 
             padding: 16px; 
             border-radius: 10px; 
             font-weight: bold; 
             font-size: 16px; 
             letter-spacing: 0.5px; 
-            color: #cbd5e1; 
-            margin-bottom: 12px; 
+            color: var(--status-text); 
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -467,21 +621,22 @@
         }
         
         .signal-status.bg-buy { 
-            background: #00c853 !important; 
-            border-color: #69f0ae !important; 
+            background: #10b981 !important; 
+            border-color: #34d399 !important; 
             color: #ffffff !important; 
         }
         .signal-status.bg-sell { 
-            background: #d50000 !important; 
-            border-color: #ff5252 !important; 
+            background: #ef4444 !important; 
+            border-color: #f87171 !important; 
             color: #ffffff !important; 
         }
 
         .phase-tag {
             font-size: 12px;
-            color: #29b6f6;
+            color: #0284c7;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-weight: 700;
         }
 
         .signal-text-large {
@@ -491,7 +646,7 @@
             text-transform: uppercase;
         }
 
-        /* History Wrapper (ຊ່ອນໄວ້ເປັນຄ່າເລີ່ມຕົ້ນ) */
+        /* History Wrapper */
         #history-wrapper { 
             display: none; 
             flex-direction: column;
@@ -510,27 +665,34 @@
             font-size: 11px; 
             margin-bottom: 8px; 
             font-weight: bold; 
+            color: var(--text-color);
         }
         .history-table { 
             width: 100%; 
             border-collapse: collapse; 
             font-size: 11px; 
             text-align: center; 
+            color: var(--text-color);
         }
         .history-table th { 
-            color: #8b9bb4; 
+            color: var(--text-sub); 
             padding: 6px; 
-            border-bottom: 1px solid #2a3441; 
+            border-bottom: 1px solid var(--border-light); 
             position: sticky;
             top: 0;
-            background: #121820;
+            background: var(--table-header-bg);
+            font-weight: 700;
         }
-        .history-table td { padding: 8px 4px; }
-        .order-buy { color: #00e676; font-weight: bold; }
-        .order-sell { color: #ff5252; font-weight: bold; }
-        .res-win { color: #00e676; font-weight: bold; }
-        .res-loss { color: #ff5252; font-weight: bold; }
-        .res-draw { color: #9e9e9e; font-weight: bold; }
+        .history-table td { 
+            padding: 8px 4px; 
+            border-bottom: 1px solid var(--border-light);
+            font-weight: 600;
+        }
+        .order-buy { color: #16a34a; font-weight: bold; }
+        .order-sell { color: #dc2626; font-weight: bold; }
+        .res-win { color: #16a34a; font-weight: bold; }
+        .res-loss { color: #dc2626; font-weight: bold; }
+        .res-draw { color: #64748b; font-weight: bold; }
 
         /* Pagination Styling */
         .pagination-container {
@@ -542,28 +704,21 @@
             padding-bottom: 10px;
         }
         .page-btn {
-            background: #1a222d;
-            border: 1px solid #363c4e;
-            color: #cbd5e1;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
             padding: 4px 10px;
             font-size: 11px;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
-        }
-        .page-btn:hover {
-            background: #2a3441;
-            color: #fff;
+            font-weight: 600;
         }
         .page-btn.active {
-            background: #00e676;
-            color: #0d1117;
-            border-color: #00e676;
+            background: #10b981;
+            color: #ffffff;
+            border-color: #10b981;
             font-weight: bold;
-        }
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
 
         /* Modal */
@@ -573,7 +728,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
             display: flex;
             justify-content: center;
@@ -588,33 +743,33 @@
             visibility: visible;
         }
         .modal-card {
-            background: #18202c;
-            border: 1px solid #2a3441;
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             width: 340px;
             padding: 24px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             transform: scale(0.9);
             transition: transform 0.25s ease-in-out;
         }
         .modal-overlay.active .modal-card { transform: scale(1); }
         .modal-icon {
             font-size: 36px;
-            color: #ff5252;
-            background: rgba(255, 82, 82, 0.1);
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
             width: 64px;
             height: 64px;
             line-height: 64px;
             border-radius: 50%;
             margin: 0 auto 14px auto;
         }
-        .modal-title { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 8px; }
-        .modal-desc { font-size: 12px; color: #8b9bb4; line-height: 1.5; margin-bottom: 16px; }
+        .modal-title { font-size: 16px; font-weight: bold; color: var(--text-color); margin-bottom: 8px; }
+        .modal-desc { font-size: 12px; color: var(--text-sub); line-height: 1.5; margin-bottom: 16px; font-weight: 600; }
         .modal-btns { display: flex; gap: 10px; }
         .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .modal-btn-confirm { background: #ff5252; color: #fff; }
-        .modal-btn-cancel { background: #2a3441; color: #cbd5e1; }
+        .modal-btn-confirm { background: #ef4444; color: #fff; }
+        .modal-btn-cancel { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); }
     </style>
 </head>
 <body>
@@ -648,8 +803,11 @@
     <div class="header">
         <span>🤖 Signal-Trade</span>
         <div class="header-right">
-            <!-- ປຸ່ມປ່ຽນມຸມມອງ (ມືຖື -> iPad -> ເເຕັມຈໍ) -->
-            <button class="view-mode-btn" id="view-mode-toggle-btn" title="ປ່ຽນມຸມມອງ">
+            <!-- ປຸ່ມປ່ຽນ Theme (Dark/Light) -->
+            <button class="theme-toggle-btn" id="theme-toggle-btn" title="ປ່ຽນໂໝດສີ (Dark/Light)">
+                <i class="fa-solid fa-sun" id="theme-icon"></i>
+            </button>
+            <button class="header-btn" id="view-mode-toggle-btn" title="ປ່ຽນມຸມມອງ">
                 <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon"></i> <span id="view-mode-text">ມຸມມອງມືຖື</span>
             </button>
             <button id="sound-toggle-btn" class="sound-toggle-btn" title="ເປີດ/ປິດ ສຽງ">🔊</button>
@@ -712,7 +870,7 @@
 
     <!-- Fine-Tune Time Sync Control -->
     <div class="offset-control">
-        <span>⏱️ SYNC TIME (<span id="current-pair-label">BTC</span>): <b id="offset-val-text" style="color:#00e676;">-6s</b></span>
+        <span>⏱️ SYNC TIME (<span id="current-pair-label">BTC</span>): <b id="offset-val-text" style="color:#10b981;">-6s</b></span>
         <div class="offset-btns">
             <button id="btn-sub-sec">-1s</button>
             <button id="btn-add-sec">+1s</button>
@@ -724,17 +882,31 @@
 
     <!-- Display & Analysis Area -->
     <div class="display-area">
-        <div class="display-row">
-            <div class="price-box"> 
-                <span id="price-title"><i class="fa-brands fa-bitcoin crypto-icon btc-color"></i>BTC/USDT</span>
-                <span id="asset-price" style="color:#fff;">$0.00</span>
+        <div class="graph-badge-box">
+            <div class="price-box-left">
+                <div class="crypto-icon-wrap" id="crypto-icon-box">
+                    <i class="fa-brands fa-bitcoin btc-color"></i>
+                </div>
+                <div class="price-box-info"> 
+                    <span class="pair-title-text" id="price-title">
+                        BTC/USDT <i class="live-dot" title="Live Stream Active"></i>
+                    </span>
+                    <span style="font-size:11px; color:var(--text-sub); font-weight: bold; margin-top:2px;">LIVE PRICE</span>
+                </div>
             </div>
+            <div class="price-box-right">
+                <span id="asset-price">$0.00</span>
+            </div>
+        </div>
+
+        <!-- CANDLE 30s + WIN RATE -->
+        <div class="metrics-row">
             <div class="analyze-box">
-                <span style="font-size:10px;">📊 CANDLE 30s</span><br>
+                <span>📊 CANDLE 30s</span><br>
                 <span class="analyze-val" id="timer">30</span>
             </div>
             <div class="winrate-box">
-                <span style="font-size:10px;">WIN RATE</span><br>
+                <span>WIN RATE</span><br>
                 <span class="winrate-val" id="win-rate">0.0%</span>
             </div>
         </div>
@@ -742,15 +914,15 @@
         <!-- Signal Status Banner -->
         <div class="signal-status">
             <span class="phase-tag" id="phase-text">STAGE 1: ORDER CANDLE</span>
-            <span id="status-text" class="signal-text-large" style="color:#f59e0b;">⏳ ກຳລັງວີເຄາະ...</span>
+            <span id="status-text" class="signal-text-large" style="color:#d97706;">⏳ ກຳລັງວີເຄາະ...</span>
         </div>
     </div>
 
     <!-- History Wrapper -->
     <div id="history-wrapper">
         <div class="history-header">
-            <span>📋 HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#00e676;">csdt30</span>)</span>
-            <span style="color:#29b6f6;">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
+            <span>📋 HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#10b981;">csdt30</span>)</span>
+            <span style="color:#0284c7;">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
         </div>
 
         <div class="history-container">
@@ -781,7 +953,7 @@
         <div class="modal-icon"><i class="fa-solid fa-trash-can"></i></div>
         <div class="modal-title">CLEAR DATA?</div>
         <div class="modal-desc">
-            Are you sure you want to clear history for <b id="modal-pair-text" style="color:#00e676;">BTC (csdt30)</b>?
+            Are you sure you want to clear history for <b id="modal-pair-text" style="color:#10b981;">BTC (csdt30)</b>?
         </div>
         <div class="modal-btns">
             <button class="modal-btn modal-btn-cancel" id="modal-cancel-btn">ຍົກເລີກ</button>
@@ -793,7 +965,7 @@
 <!-- Custom Modal Box (Logout) -->
 <div class="modal-overlay" id="logout-modal">
     <div class="modal-card">
-        <div class="modal-icon" style="color: #ff5252;"><i class="fa-solid fa-right-from-bracket"></i></div>
+        <div class="modal-icon" style="color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i></div>
         <div class="modal-title">ອອກຈາກລະບົບ</div>
         <div class="modal-desc">
             ທ່ານຕ້ອງການອອກຈາກລະບົບແທ້ບໍ?
@@ -806,6 +978,33 @@
 </div>
 
 <script>
+    // --- Theme Toggle Logic (Dark / Light Mode) ---
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeIcon = document.getElementById('theme-icon');
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            document.body.classList.add('light-theme');
+            themeIcon.className = 'fa-solid fa-moon';
+            themeToggleBtn.style.color = '#0284c7';
+        } else {
+            document.body.classList.remove('light-theme');
+            themeIcon.className = 'fa-solid fa-sun';
+            themeToggleBtn.style.color = '#d97706';
+        }
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('signal_trade_theme') || 'dark';
+    applyTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+        const isLight = document.body.classList.contains('light-theme');
+        const newTheme = isLight ? 'dark' : 'light';
+        applyTheme(newTheme);
+        localStorage.setItem('signal_trade_theme', newTheme);
+    });
+
     // View Mode Toggle Logic (Mobile -> iPad -> Fullscreen)
     const viewModeToggleBtn = document.getElementById('view-mode-toggle-btn');
     const viewModeIcon = document.getElementById('view-mode-icon');
@@ -877,7 +1076,7 @@
     let serverTimeOffset = 0;
     let isSoundEnabled = true;
     let currentPage = 1;
-    const rowsPerPage = 10; // ຈຳນວນແຖວຕໍ່ 1 ໜ້າ
+    const rowsPerPage = 10; 
 
     let audioCtx = null;
     let audioUnlocked = false;
@@ -992,6 +1191,7 @@
     const strategySelect = document.getElementById('strategy-select');
     strategySelect.value = 'csdt30';
     const priceTitle = document.getElementById('price-title');
+    const cryptoIconBox = document.getElementById('crypto-icon-box');
     const assetPriceElem = document.getElementById('asset-price');
     const offsetValText = document.getElementById('offset-val-text');
     const currentPairLabel = document.getElementById('current-pair-label');
@@ -1033,7 +1233,6 @@
     const toggleHistoryBtn = document.getElementById('toggle-history-btn');
     const historyWrapper = document.getElementById('history-wrapper');
 
-    // ສະຫຼັບການສະແດງ/ຊ່ອນ ປະຫວັດການເທຣດ
     toggleHistoryBtn.addEventListener('click', () => {
         if (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') {
             historyWrapper.style.display = 'flex';
@@ -1189,7 +1388,6 @@
 
         if (totalPages <= 1) return;
 
-        // Previous Button
         const prevBtn = document.createElement('button');
         prevBtn.className = 'page-btn';
         prevBtn.innerText = '‹';
@@ -1202,7 +1400,6 @@
         });
         paginationContainer.appendChild(prevBtn);
 
-        // Page Number Buttons
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement('button');
             pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
@@ -1214,7 +1411,6 @@
             paginationContainer.appendChild(pageBtn);
         }
 
-        // Next Button
         const nextBtn = document.createElement('button');
         nextBtn.className = 'page-btn';
         nextBtn.innerText = '›';
@@ -1244,7 +1440,7 @@
 
         const profitElem = document.getElementById('total-profit');
         profitElem.innerText = (data.profitLoss >= 0 ? '+$' : '-$') + Math.abs(data.profitLoss).toFixed(2);
-        profitElem.style.color = data.profitLoss >= 0 ? '#00e676' : '#ff5252';
+        profitElem.style.color = data.profitLoss >= 0 ? '#10b981' : '#ef4444';
 
         document.getElementById('total-balance').innerText = '$' + (initialBalance + data.profitLoss).toLocaleString('en-US', { minimumFractionDigits: 2 });
 
@@ -1297,13 +1493,15 @@
         const pairLabel = currentPair.replace('USDT', '');
         
         let iconHtml = '';
-        if (currentPair === 'BTCUSDT') iconHtml = `<i class="fa-brands fa-bitcoin crypto-icon btc-color"></i>`;
-        else if (currentPair === 'ETHUSDT') iconHtml = `<i class="fa-brands fa-ethereum crypto-icon eth-color"></i>`;
-        else if (currentPair === 'BNBUSDT') iconHtml = `<i class="fa-solid fa-coins crypto-icon bnb-color"></i>`;
-        else if (currentPair === 'SUIUSDT') iconHtml = `<i class="fa-solid fa-droplet crypto-icon sui-color"></i>`;
-        else if (currentPair === 'SOLUSDT') iconHtml = `<i class="fa-solid fa-sun crypto-icon sol-color"></i>`;
+        if (currentPair === 'BTCUSDT') iconHtml = `<i class="fa-brands fa-bitcoin btc-color"></i>`;
+        else if (currentPair === 'ETHUSDT') iconHtml = `<i class="fa-brands fa-ethereum eth-color"></i>`;
+        else if (currentPair === 'BNBUSDT') iconHtml = `<i class="fa-solid fa-coins bnb-color"></i>`;
+        else if (currentPair === 'SUIUSDT') iconHtml = `<i class="fa-solid fa-droplet sui-color"></i>`;
+        else if (currentPair === 'SOLUSDT') iconHtml = `<i class="fa-solid fa-sun sol-color"></i>`;
 
-        priceTitle.innerHTML = `${iconHtml}${pairLabel}/USDT`;
+        cryptoIconBox.innerHTML = iconHtml;
+        priceTitle.innerHTML = `${pairLabel}/USDT <i class="live-dot" title="Live Stream Active"></i>`;
+        
         updateOffsetDisplay();
         renderPairStats();
     });
@@ -1362,10 +1560,6 @@
                         if (data.totalOrd > 0) {
                             if (data.lastResultStatus === 'WIN') {
                                 data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
-                            } else if (data.lastResultStatus === 'LOSS') {
-                                // ຖ້າເສຍ: ໄປທາງເກົ່າ
-                            } else if (data.lastResultStatus === 'DRAW') {
-                                // ຖ້າສະເໝີ: ໄປທາງເກົ່າ
                             }
                         }
                     }
@@ -1398,11 +1592,11 @@
 
         if (isCandle1) {
             phaseText.innerText = `STAGE 1: ORDER CANDLE (${currentStrategy})`;
-            phaseText.style.color = "#29b6f6";
+            phaseText.style.color = "#0284c7";
 
             if (remainingSeconds > 10) {
                 statusText.innerText = "⏳ ກຳລັງວີເຄາະ...";
-                statusText.style.color = "#f59e0b";
+                statusText.style.color = "#d97706";
                 statusText.classList.add('signal-text-large');
                 
                 signalStatusElem.classList.remove('bg-buy', 'bg-sell');
@@ -1435,11 +1629,11 @@
             signalStatusElem.classList.remove('bg-buy', 'bg-sell');
 
             phaseText.innerText = "STAGE 2: RESULT CANDLE";
-            phaseText.style.color = "#29b6f6";
+            phaseText.style.color = "#0284c7";
             
             statusText.classList.add('signal-text-large');
             statusText.innerText = `ລໍຖ້າຜົນ (${data.currentSignal})`;
-            statusText.style.color = '#f59e0b';
+            statusText.style.color = '#d97706';
         }
     }
 
@@ -1577,4 +1771,4 @@
 </script>
 
 </body>
-</html> 
+</html>
