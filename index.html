@@ -597,11 +597,16 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
+        /* Color classes for icons */
         .btc-color { color: #f7931a; }
         .eth-color { color: #627eea; }
         .sui-color { color: #0284c7; }
         .sol-color { color: #10b981; }
         .bnb-color { color: #d97706; }
+        .xrp-color { color: #23292f; }
+        .doge-color { color: #c2a633; }
+        .trx-color { color: #ef0027; }
+        .gold-color { color: #ffd700; }
 
         /* Signal Status Banner */
         .signal-status { 
@@ -803,7 +808,7 @@
     <div class="header">
         <span>🤖 Signal-Trade</span>
         <div class="header-right">
-            <!-- ປຸ່ມປ່ຽນ Theme (Dark/Light) -->
+            <!-- ປ່ຽນ Theme (Dark/Light) -->
             <button class="theme-toggle-btn" id="theme-toggle-btn" title="ປ່ຽນໂໝດສີ (Dark/Light)">
                 <i class="fa-solid fa-sun" id="theme-icon"></i>
             </button>
@@ -854,6 +859,10 @@
             <option value="BNBUSDT">⚡ BNB/USDT</option>
             <option value="SUIUSDT">⚡ SUI/USDT</option>
             <option value="SOLUSDT">⚡ SOL/USDT</option>
+            <option value="XRPUSDT">⚡ XRP/USDT</option>
+            <option value="DOGEUSDT">⚡ DOGE/USDT</option>
+            <option value="TRXUSDT">⚡ TRX/USDT</option>
+            <option value="PAXGUSDT">🥇 GOLD/USDT</option>
         </select>
 
         <button id="toggle-history-btn" class="setup-btn btn-neutral-custom">📜 HISTORY</button>
@@ -1005,11 +1014,11 @@
         localStorage.setItem('signal_trade_theme', newTheme);
     });
 
-    // View Mode Toggle Logic (Mobile -> iPad -> Fullscreen)
+    // View Mode Toggle Logic
     const viewModeToggleBtn = document.getElementById('view-mode-toggle-btn');
     const viewModeIcon = document.getElementById('view-mode-icon');
     const viewModeText = document.getElementById('view-mode-text');
-    let viewModeState = 0; // 0: ມືຖື, 1: iPad, 2: ເຕັມຈໍ
+    let viewModeState = 0; 
 
     viewModeToggleBtn.addEventListener('click', () => {
         viewModeState = (viewModeState + 1) % 3;
@@ -1122,7 +1131,11 @@
         'ETHUSDT': -11000,
         'BNBUSDT': 29000,
         'SUIUSDT': 20000,
-        'SOLUSDT': 25000
+        'SOLUSDT': 25000,
+        'XRPUSDT': 15000,
+        'DOGEUSDT': 15000,
+        'TRXUSDT': 15000,
+        'PAXGUSDT': 10000
     };
 
     function loadSavedOffsets() {
@@ -1144,14 +1157,20 @@
         'ETHUSDT': 0.00,
         'BNBUSDT': 0.00,
         'SUIUSDT': 0.00,
-        'SOLUSDT': 0.00
+        'SOLUSDT': 0.00,
+        'XRPUSDT': 0.00,
+        'DOGEUSDT': 0.00,
+        'TRXUSDT': 0.00,
+        'PAXGUSDT': 0.00
     };
 
-    const supportedPairs = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SUIUSDT', 'SOLUSDT'];
+    const supportedPairs = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SUIUSDT', 'SOLUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT', 'PAXGUSDT'];
 
     function formatPrice(symbol, price) {
         if (!price || isNaN(price)) return '$0.00';
-        if (symbol === 'SUIUSDT') return '$' + price.toFixed(3);
+        if (['SUIUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT'].includes(symbol)) {
+            return '$' + price.toFixed(4);
+        }
         return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
@@ -1370,10 +1389,15 @@
         };
     }
 
+    function getPairLabel(pair) {
+        if (pair === 'PAXGUSDT') return 'GOLD';
+        return pair.replace('USDT', '');
+    }
+
     function updateOffsetDisplay() {
         const sec = (pairOffsets[currentPair] || 0) / 1000;
         offsetValText.innerText = (sec >= 0 ? '+' : '') + sec + 's';
-        const label = currentPair.replace('USDT', '');
+        const label = getPairLabel(currentPair);
         currentPairLabel.innerText = label;
         historyPairLabel.innerText = label;
         historyStratLabel.innerText = currentStrategy;
@@ -1469,8 +1493,9 @@
                 resultText = '+$0.00';
             }
 
-            const entryText = item.pairSymbol === 'SUIUSDT' ? item.entry.toFixed(3) : item.entry.toFixed(2);
-            const closeText = item.pairSymbol === 'SUIUSDT' ? item.close.toFixed(3) : item.close.toFixed(2);
+            const isSmallDecimals = ['SUIUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT'].includes(item.pairSymbol);
+            const entryText = isSmallDecimals ? item.entry.toFixed(4) : item.entry.toFixed(2);
+            const closeText = isSmallDecimals ? item.close.toFixed(4) : item.close.toFixed(2);
 
             tr.innerHTML = `
                 <td>${item.timeStr}</td>
@@ -1490,7 +1515,7 @@
     pairSelect.addEventListener('change', (e) => {
         currentPair = e.target.value;
         currentPage = 1;
-        const pairLabel = currentPair.replace('USDT', '');
+        const pairLabel = getPairLabel(currentPair);
         
         let iconHtml = '';
         if (currentPair === 'BTCUSDT') iconHtml = `<i class="fa-brands fa-bitcoin btc-color"></i>`;
@@ -1498,6 +1523,10 @@
         else if (currentPair === 'BNBUSDT') iconHtml = `<i class="fa-solid fa-coins bnb-color"></i>`;
         else if (currentPair === 'SUIUSDT') iconHtml = `<i class="fa-solid fa-droplet sui-color"></i>`;
         else if (currentPair === 'SOLUSDT') iconHtml = `<i class="fa-solid fa-sun sol-color"></i>`;
+        else if (currentPair === 'XRPUSDT') iconHtml = `<i class="fa-solid fa-xmark xrp-color"></i>`;
+        else if (currentPair === 'DOGEUSDT') iconHtml = `<i class="fa-solid fa-dog doge-color"></i>`;
+        else if (currentPair === 'TRXUSDT') iconHtml = `<i class="fa-solid fa-gem trx-color"></i>`;
+        else if (currentPair === 'PAXGUSDT') iconHtml = `<i class="fa-solid fa-coins gold-color"></i>`;
 
         cryptoIconBox.innerHTML = iconHtml;
         priceTitle.innerHTML = `${pairLabel}/USDT <i class="live-dot" title="Live Stream Active"></i>`;
@@ -1691,7 +1720,7 @@
         const currentOffset = pairOffsets[pair] || 0;
         const synchronizedNow = new Date((Date.now() + serverTimeOffset) + currentOffset);
         const timeStr = synchronizedNow.toTimeString().split(' ')[0];
-        const pairLabel = pair.replace('USDT', '');
+        const pairLabel = getPairLabel(pair);
 
         data.history.unshift({
             timeStr,
@@ -1711,7 +1740,7 @@
 
     clearBtn.addEventListener('click', () => {
         unlockMobileAudio();
-        const pairLabel = currentPair.replace('USDT', '');
+        const pairLabel = getPairLabel(currentPair);
         modalPairText.innerText = `${pairLabel} (${currentStrategy})`;
         clearModal.classList.add('active');
     });
