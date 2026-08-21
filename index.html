@@ -1126,16 +1126,17 @@
 
     const BASE_AMOUNT = 10;
 
+    // แก้ไขปรับเวลาค่าตั้งต้นตามที่คุณระบุ
     const defaultPairOffsets = {
         'BTCUSDT': -6000,
         'ETHUSDT': -11000,
         'BNBUSDT': 29000,
         'SUIUSDT': 20000,
         'SOLUSDT': 25000,
-        'XRPUSDT': 15000,
-        'DOGEUSDT': 15000,
-        'TRXUSDT': 15000,
-        'PAXGUSDT': 10000
+        'XRPUSDT': -26000,  // -26s
+        'DOGEUSDT': -21000, // -21s
+        'TRXUSDT': 14000,    // +14s
+        'PAXGUSDT': -17000  // -17s
     };
 
     function loadSavedOffsets() {
