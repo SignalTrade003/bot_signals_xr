@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signal-Trade</title>
+    <title>Daimoney Signal pro</title>
     <!-- ໂຫຼດ FontAwesome ສຳລັບໄອຄອນ Crypto ແລະຖັງຂຍະ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -649,6 +649,10 @@
             font-weight: 900 !important;
             letter-spacing: 1.5px !important;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         /* History Wrapper */
@@ -783,7 +787,7 @@
 <div class="login-panel" id="login-panel">
     <div class="login-inner">
         <div class="login-logo"><i class="fa-solid fa-robot"></i></div>
-        <div class="login-title">Signal-Trade</div>
+        <div class="login-title">Daimoney Signal pro</div>
         <div class="login-desc">ກະລຸນາເຂົ້າສູ່ລະບົບເພື່ອສືບຕໍ່</div>
         
         <div class="form-group">
@@ -806,7 +810,7 @@
 <div class="bot-panel" id="bot-panel">
     <!-- Header -->
     <div class="header">
-        <span>🤖 Signal-Trade</span>
+        <span>🤖 Daimoney Signal pro</span>
         <div class="header-right">
             <!-- ປ່ຽນ Theme (Dark/Light) -->
             <button class="theme-toggle-btn" id="theme-toggle-btn" title="ປ່ຽນໂໝດສີ (Dark/Light)">
@@ -1126,17 +1130,16 @@
 
     const BASE_AMOUNT = 10;
 
-    // แก้ไขปรับเวลาค่าตั้งต้นตามที่คุณระบุ
     const defaultPairOffsets = {
         'BTCUSDT': -6000,
         'ETHUSDT': -11000,
         'BNBUSDT': 29000,
         'SUIUSDT': 20000,
         'SOLUSDT': 25000,
-        'XRPUSDT': -26000,  // -26s
-        'DOGEUSDT': -21000, // -21s
-        'TRXUSDT': 14000,    // +14s
-        'PAXGUSDT': -17000  // -17s
+        'XRPUSDT': 15000,
+        'DOGEUSDT': 15000,
+        'TRXUSDT': 15000,
+        'PAXGUSDT': 10000
     };
 
     function loadSavedOffsets() {
@@ -1625,7 +1628,7 @@
             phaseText.style.color = "#0284c7";
 
             if (remainingSeconds > 10) {
-                statusText.innerText = "⏳ ກຳລັງວີເຄາະ...";
+                statusText.innerHTML = "⏳ ກຳລັງວີເຄາະ...";
                 statusText.style.color = "#d97706";
                 statusText.classList.add('signal-text-large');
                 
@@ -1644,12 +1647,12 @@
                 }
 
                 if (data.currentSignal === 'BUY') {
-                    statusText.innerText = `SIGNAL: BUY ($${data.currentAmount})`;
+                    statusText.innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> SIGNAL: BUY ($${data.currentAmount})`;
                     statusText.style.color = '#ffffff';
                     signalStatusElem.classList.add('bg-buy');
                     signalStatusElem.classList.remove('bg-sell');
                 } else if (data.currentSignal === 'SELL') {
-                    statusText.innerText = `SIGNAL: SELL ($${data.currentAmount})`;
+                    statusText.innerHTML = `<i class="fa-solid fa-arrow-trend-down"></i> SIGNAL: SELL ($${data.currentAmount})`;
                     statusText.style.color = '#ffffff';
                     signalStatusElem.classList.add('bg-sell');
                     signalStatusElem.classList.remove('bg-buy');
@@ -1662,7 +1665,8 @@
             phaseText.style.color = "#0284c7";
             
             statusText.classList.add('signal-text-large');
-            statusText.innerText = `ລໍຖ້າຜົນ (${data.currentSignal})`;
+            const arrowIcon = data.currentSignal === 'BUY' ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
+            statusText.innerHTML = `${arrowIcon} ລໍຖ້າຜົນ (${data.currentSignal})`;
             statusText.style.color = '#d97706';
         }
     }
