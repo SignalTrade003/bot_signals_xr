@@ -31,15 +31,15 @@
             --status-text: #cbd5e1;
         }
 
-        /* ປັບປຸງ Light Theme ໃຫ້ສະບາຍຕາ (Eye-friendly Soft Light Theme) */
+        /* Light Theme */
         body.light-theme {
-            --bg-color: #e5e9f0;           /* ສີພື້ນຫຼັງຫຼັກນຸ່ມນວນ */
-            --panel-bg: #f4f6f9;          /* ສີ Panel ນວນຕາ ບໍ່ຂາວຈ້າ */
-            --card-bg: #eaeff5;           /* ສີ Card Soft Tone */
-            --display-bg: #eef2f7;        /* ສີ Display Soft Soft Tone */
-            --text-color: #1e293b;        /* ສີຕົວໜັງສືເຂັ້ມ ອ່ານງ່າຍ ຄົມຊັດ */
-            --text-sub: #526075;          /* ສີຕົວໜັງສືຮອງ ເບິ່ງຊັດເຈນ */
-            --border-color: #cbd5e1;      /* เส้นขอบนุ่มนวล */
+            --bg-color: #e5e9f0;
+            --panel-bg: #f4f6f9;
+            --card-bg: #eaeff5;
+            --display-bg: #eef2f7;
+            --text-color: #1e293b;
+            --text-sub: #526075;
+            --border-color: #cbd5e1;
             --border-light: #dbe2ec;
             --input-bg: #f8fafc;
             --modal-bg: #f8fafc;
@@ -68,7 +68,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Responsive Wrapper Frame for Mobile View Mode */
+        /* Responsive Frame for Mobile View */
         body.mobile-view-active {
             background-color: #05070a !important;
         }
@@ -85,7 +85,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
         }
 
-        /* Responsive Wrapper Frame for Tablet (iPad) View Mode */
+        /* Responsive Frame for Tablet (iPad) View */
         body.tablet-view-active {
             background-color: #05070a !important;
         }
@@ -100,44 +100,6 @@
             border-radius: 28px !important;
             border: 8px solid var(--border-color) !important;
             box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
-        }
-
-        /* View Mode Switcher Button (Header Style) */
-        .header-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: #059669;
-            border-radius: 6px;
-            height: 34px;
-            padding: 0 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .header-btn:hover {
-            filter: brightness(1.05);
-            border-color: #10b981;
-        }
-
-        /* Theme Toggle Button */
-        .theme-toggle-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: #d97706;
-            border-radius: 6px;
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
         /* Login Container */
@@ -261,10 +223,10 @@
             align-items: center;
             gap: 8px;
         }
-        .sound-toggle-btn {
+        .settings-toggle-btn {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            color: #059669;
+            color: #0284c7;
             border-radius: 6px;
             width: 34px;
             height: 34px;
@@ -275,9 +237,9 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .sound-toggle-btn.muted {
-            color: #dc2626;
-            border-color: #fca5a5;
+        .settings-toggle-btn:hover {
+            filter: brightness(1.1);
+            border-color: #0284c7;
         }
         .close-btn { 
             color: #dc2626; 
@@ -420,9 +382,9 @@
             filter: brightness(1.05);
         }
 
-        /* Offset Controller */
+        /* Offset Controller (Default: hidden) */
         .offset-control {
-            display: flex;
+            display: none;
             justify-content: space-between;
             align-items: center;
             background: var(--card-bg);
@@ -779,6 +741,39 @@
         .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .modal-btn-confirm { background: #ef4444; color: #fff; }
         .modal-btn-cancel { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); }
+
+        /* Settings Modal Specific List */
+        .setting-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-light);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .setting-action-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .setting-action-btn:hover {
+            filter: brightness(1.1);
+            border-color: #0284c7;
+        }
     </style>
 </head>
 <body>
@@ -812,14 +807,10 @@
     <div class="header">
         <span>🤖 Daimoney Signal pro</span>
         <div class="header-right">
-            <!-- ປ່ຽນ Theme (Dark/Light) -->
-            <button class="theme-toggle-btn" id="theme-toggle-btn" title="ປ່ຽນໂໝດສີ (Dark/Light)">
-                <i class="fa-solid fa-sun" id="theme-icon"></i>
+            <!-- ປຸ່ມການຕັ້ງຄ່າໃຫມ່ -->
+            <button class="settings-toggle-btn" id="settings-open-btn" title="ການຕັ້ງຄ່າ">
+                <i class="fa-solid fa-gear"></i>
             </button>
-            <button class="header-btn" id="view-mode-toggle-btn" title="ປ່ຽນມຸມມອງ">
-                <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon"></i> <span id="view-mode-text">ມຸມມອງມືຖື</span>
-            </button>
-            <button id="sound-toggle-btn" class="sound-toggle-btn" title="ເປີດ/ປິດ ສຽງ">🔊</button>
             <span class="close-btn" id="logout-btn" title="ອອກຈາກລະບົບ">❌</span>
         </div>
     </div>
@@ -882,7 +873,7 @@
     </div>
 
     <!-- Fine-Tune Time Sync Control -->
-    <div class="offset-control">
+    <div class="offset-control" id="offset-control-panel">
         <span>⏱️ SYNC TIME (<span id="current-pair-label">BTC</span>): <b id="offset-val-text" style="color:#10b981;">-6s</b></span>
         <div class="offset-btns">
             <button id="btn-sub-sec">-1s</button>
@@ -960,6 +951,59 @@
     </div>
 </div>
 
+<!-- Custom Settings Modal Box (ການຕັ້ງຄ່າ) -->
+<div class="modal-overlay" id="settings-modal">
+    <div class="modal-card">
+        <div class="modal-icon" style="color: #0284c7; background: rgba(2, 132, 199, 0.1);">
+            <i class="fa-solid fa-sliders"></i>
+        </div>
+        <div class="modal-title">ການຕັ້ງຄ່າ (SETTINGS)</div>
+        <div class="modal-desc">ປັບแต่งລະບົບຕາມຄວາມຕ້ອງການ</div>
+
+        <div style="margin-bottom: 16px; text-align: left;">
+            <!-- ປັບ Theme -->
+            <div class="setting-list-item">
+                <span>ໂໝດສີ (Theme):</span>
+                <button class="setting-action-btn" id="theme-toggle-btn">
+                    <i class="fa-solid fa-sun" id="theme-icon" style="color:#d97706;"></i>
+                    <span id="theme-text">Dark Mode</span>
+                </button>
+            </div>
+
+            <!-- ປັບມຸມມອງ View Mode -->
+            <div class="setting-list-item">
+                <span>ມຸມມອງ (View Mode):</span>
+                <button class="setting-action-btn" id="view-mode-toggle-btn">
+                    <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon" style="color:#059669;"></i>
+                    <span id="view-mode-text">ມຸມມອງມືຖື</span>
+                </button>
+            </div>
+
+            <!-- ເປີດ/ປິດ ສຽງ -->
+            <div class="setting-list-item">
+                <span>ສຽງແຈ້ງເຕືອນ (Sound):</span>
+                <button class="setting-action-btn" id="sound-toggle-btn">
+                    <span id="sound-icon">🔊</span>
+                    <span id="sound-text">ເປີດສຽງ</span>
+                </button>
+            </div>
+
+            <!-- ປຸ່ມສະແດງ / ຊ່ອນ ການປັບເວລາ Sync Time -->
+            <div class="setting-list-item">
+                <span>ປັບເວລາ (Sync Time):</span>
+                <button class="setting-action-btn" id="sync-time-toggle-btn">
+                    <i class="fa-solid fa-stopwatch" id="sync-time-icon" style="color:#ef4444;"></i>
+                    <span id="sync-time-text">ປິດຢູ່</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="modal-btns">
+            <button class="modal-btn modal-btn-cancel" id="settings-close-btn" style="width:100%;">ອັດ (Close)</button>
+        </div>
+    </div>
+</div>
+
 <!-- Custom Modal Box (Clear Data) -->
 <div class="modal-overlay" id="clear-modal">
     <div class="modal-card">
@@ -991,19 +1035,61 @@
 </div>
 
 <script>
+    // --- Settings Modal Elements ---
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsOpenBtn = document.getElementById('settings-open-btn');
+    const settingsCloseBtn = document.getElementById('settings-close-btn');
+
+    settingsOpenBtn.addEventListener('click', () => {
+        settingsModal.classList.add('active');
+    });
+
+    function closeSettingsModal() {
+        settingsModal.classList.remove('active');
+    }
+
+    settingsCloseBtn.addEventListener('click', closeSettingsModal);
+
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) closeSettingsModal();
+    });
+
+    // --- Sync Time Toggle Logic ---
+    const syncTimeToggleBtn = document.getElementById('sync-time-toggle-btn');
+    const syncTimeIcon = document.getElementById('sync-time-icon');
+    const syncTimeText = document.getElementById('sync-time-text');
+    const offsetControlPanel = document.getElementById('offset-control-panel');
+    let isSyncTimeVisible = false;
+
+    syncTimeToggleBtn.addEventListener('click', () => {
+        isSyncTimeVisible = !isSyncTimeVisible;
+        if (isSyncTimeVisible) {
+            offsetControlPanel.style.display = 'flex';
+            syncTimeIcon.style.color = '#10b981';
+            syncTimeText.innerText = 'ເປີດຢູ່';
+        } else {
+            offsetControlPanel.style.display = 'none';
+            syncTimeIcon.style.color = '#ef4444';
+            syncTimeText.innerText = 'ປິດຢູ່';
+        }
+    });
+
     // --- Theme Toggle Logic (Dark / Light Mode) ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
 
     function applyTheme(theme) {
         if (theme === 'light') {
             document.body.classList.add('light-theme');
             themeIcon.className = 'fa-solid fa-moon';
-            themeToggleBtn.style.color = '#0284c7';
+            themeIcon.style.color = '#0284c7';
+            themeText.innerText = 'Light Mode';
         } else {
             document.body.classList.remove('light-theme');
             themeIcon.className = 'fa-solid fa-sun';
-            themeToggleBtn.style.color = '#d97706';
+            themeIcon.style.color = '#d97706';
+            themeText.innerText = 'Dark Mode';
         }
     }
 
@@ -1223,16 +1309,18 @@
     const capitalSelect = document.getElementById('capital-select');
     const martingaleStepText = document.getElementById('martingale-step-text');
     const soundToggleBtn = document.getElementById('sound-toggle-btn');
+    const soundIcon = document.getElementById('sound-icon');
+    const soundText = document.getElementById('sound-text');
     const logoutBtn = document.getElementById('logout-btn');
 
     soundToggleBtn.addEventListener('click', () => {
         isSoundEnabled = !isSoundEnabled;
         if (isSoundEnabled) {
-            soundToggleBtn.innerText = '🔊';
-            soundToggleBtn.classList.remove('muted');
+            soundIcon.innerText = '🔊';
+            soundText.innerText = 'ເປີດສຽງ';
         } else {
-            soundToggleBtn.innerText = '🔇';
-            soundToggleBtn.classList.add('muted');
+            soundIcon.innerText = '🔇';
+            soundText.innerText = 'ປິດສຽງ';
         }
     });
 
