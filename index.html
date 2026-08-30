@@ -13,26 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
+        /* ຕັ້ງຄ່າ Default ໃຫ້ເປັນ Theme ສີຂາວ (Light Theme) */
         :root {
-            --bg-color: #0d1117;
-            --panel-bg: #121820;
-            --card-bg: #1a222d;
-            --display-bg: #18202c;
-            --text-color: #ffffff;
-            --text-sub: #8b9bb4;
-            --border-color: #363c4e;
-            --border-light: #2a3441;
-            --input-bg: #0d1117;
-            --modal-bg: #18202c;
-            --table-header-bg: #121820;
-            --badge-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
-            --metrics-bg: #111822;
-            --status-bg: #1e293b;
-            --status-text: #cbd5e1;
-        }
-
-        /* Light Theme */
-        body.light-theme {
             --bg-color: #e5e9f0;
             --panel-bg: #f4f6f9;
             --card-bg: #eaeff5;
@@ -48,6 +30,25 @@
             --metrics-bg: #e5eaf1;
             --status-bg: #dbe2ec;
             --status-text: #1e293b;
+        }
+
+        /* Dark Theme Style */
+        body.dark-theme {
+            --bg-color: #0d1117;
+            --panel-bg: #121820;
+            --card-bg: #1a222d;
+            --display-bg: #18202c;
+            --text-color: #ffffff;
+            --text-sub: #8b9bb4;
+            --border-color: #363c4e;
+            --border-light: #2a3441;
+            --input-bg: #0d1117;
+            --modal-bg: #18202c;
+            --table-header-bg: #121820;
+            --badge-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            --metrics-bg: #111822;
+            --status-bg: #1e293b;
+            --status-text: #cbd5e1;
         }
 
         * { 
@@ -70,10 +71,10 @@
 
         /* Responsive Frame for Mobile View */
         body.mobile-view-active {
-            background-color: #05070a !important;
-        }
-        body.light-theme.mobile-view-active {
             background-color: #cbd5e1 !important;
+        }
+        body.dark-theme.mobile-view-active {
+            background-color: #05070a !important;
         }
         body.mobile-view-active .login-panel,
         body.mobile-view-active .bot-panel {
@@ -87,10 +88,10 @@
 
         /* Responsive Frame for Tablet (iPad) View */
         body.tablet-view-active {
-            background-color: #05070a !important;
-        }
-        body.light-theme.tablet-view-active {
             background-color: #cbd5e1 !important;
+        }
+        body.dark-theme.tablet-view-active {
+            background-color: #05070a !important;
         }
         body.tablet-view-active .login-panel,
         body.tablet-view-active .bot-panel {
@@ -965,8 +966,8 @@
             <div class="setting-list-item">
                 <span>ໂໝດສີ (Theme):</span>
                 <button class="setting-action-btn" id="theme-toggle-btn">
-                    <i class="fa-solid fa-sun" id="theme-icon" style="color:#d97706;"></i>
-                    <span id="theme-text">Dark Mode</span>
+                    <i class="fa-solid fa-moon" id="theme-icon" style="color:#0284c7;"></i>
+                    <span id="theme-text">Light Mode</span>
                 </button>
             </div>
 
@@ -1035,6 +1036,23 @@
 </div>
 
 <script>
+    // --- Keep Alive & Background Execution Lock (ປ້ອງກັນ Browser ຢຸດທຳງານເມື່ອບໍ່ໄດ້ເປີດໜ້າຈໍ) ---
+    function enableBackgroundKeepAlive() {
+        if ('locks' in navigator) {
+            navigator.locks.request('bot_keep_alive_lock', { mode: 'exclusive' }, () => {
+                return new Promise(() => {}); // ຖື Lock ໄວ້ຕະຫຼອດເວລາ
+            }).catch(e => console.log('Web Lock API Error:', e));
+        }
+    }
+    enableBackgroundKeepAlive();
+
+    // Re-sync ເມື່ອສະຫຼັບກັບມາທີ່ໜ້າຕ່າງເວັບໄຊ
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && botPanel.style.display === 'flex') {
+            updateSyncTimer();
+        }
+    });
+
     // --- Settings Modal Elements ---
     const settingsModal = document.getElementById('settings-modal');
     const settingsOpenBtn = document.getElementById('settings-open-btn');
@@ -1074,32 +1092,32 @@
         }
     });
 
-    // --- Theme Toggle Logic (Dark / Light Mode) ---
+    // --- Theme Toggle Logic (Default: Light Theme ສະເໝີ) ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeIcon = document.getElementById('theme-icon');
     const themeText = document.getElementById('theme-text');
 
     function applyTheme(theme) {
-        if (theme === 'light') {
-            document.body.classList.add('light-theme');
-            themeIcon.className = 'fa-solid fa-moon';
-            themeIcon.style.color = '#0284c7';
-            themeText.innerText = 'Light Mode';
-        } else {
-            document.body.classList.remove('light-theme');
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
             themeIcon.className = 'fa-solid fa-sun';
             themeIcon.style.color = '#d97706';
             themeText.innerText = 'Dark Mode';
+        } else {
+            document.body.classList.remove('dark-theme');
+            themeIcon.className = 'fa-solid fa-moon';
+            themeIcon.style.color = '#0284c7';
+            themeText.innerText = 'Light Mode';
         }
     }
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('signal_trade_theme') || 'dark';
-    applyTheme(savedTheme);
+    // ຕັ້ງຄ່າເລີ່ມຕົ້ນໃຫ້ເປັນ Light Theme ສະເໝີ (ແລະ ລຶບ memory ເກົ່າທີ່ເຄີຍຈຳ Dark Mode)
+    localStorage.setItem('signal_trade_theme', 'light');
+    applyTheme('light');
 
     themeToggleBtn.addEventListener('click', () => {
-        const isLight = document.body.classList.contains('light-theme');
-        const newTheme = isLight ? 'dark' : 'light';
+        const isDark = document.body.classList.contains('dark-theme');
+        const newTheme = isDark ? 'light' : 'dark';
         applyTheme(newTheme);
         localStorage.setItem('signal_trade_theme', newTheme);
     });
@@ -1326,6 +1344,8 @@
 
     let initialBalance = parseFloat(capitalSelect.value);
     let timerInterval = null;
+    let wsSocket = null;
+    let pingInterval = null;
 
     const clearBtn = document.getElementById('clear-btn');
     const statusText = document.getElementById('status-text');
@@ -1454,11 +1474,17 @@
         }
     }
 
+    // ເພີ່ມ Auto Keep-Alive reconnect WebSocket ເພື່ອໃຫ້ Run ຕະຫຼອດເວລາ
     function connectAllWebSockets() {
-        const streamNames = supportedPairs.map(p => `${p.toLowerCase()}@ticker`).join('/');
-        const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${streamNames}`);
+        if (wsSocket) {
+            try { wsSocket.close(); } catch(e){}
+        }
+        if (pingInterval) clearInterval(pingInterval);
 
-        socket.onmessage = function (event) {
+        const streamNames = supportedPairs.map(p => `${p.toLowerCase()}@ticker`).join('/');
+        wsSocket = new WebSocket(`wss://stream.binance.com:9443/ws/${streamNames}`);
+
+        wsSocket.onmessage = function (event) {
             const data = JSON.parse(event.data);
             const symbol = data.s ? data.s.toUpperCase() : '';
             if (symbol && livePrices[symbol] !== undefined) {
@@ -1472,13 +1498,21 @@
             }
         };
 
-        socket.onerror = function (error) {
+        wsSocket.onerror = function (error) {
             console.error("WebSocket Error:", error);
         };
 
-        socket.onclose = function () {
-            setTimeout(connectAllWebSockets, 3000);
+        wsSocket.onclose = function () {
+            // ເຊື່ອມຕໍ່ໃໝ່ທັນທີເມື່ອ Connection ຫຼຸດ
+            setTimeout(connectAllWebSockets, 2000);
         };
+
+        // ສົ່ງ Ping Frame ໄປຫາ Binance WebSockets ເພື່ອປ້ອງກັນ Timeout connection
+        pingInterval = setInterval(() => {
+            if (wsSocket && wsSocket.readyState === WebSocket.OPEN) {
+                try { wsSocket.send(JSON.stringify({ method: "PING" })); } catch(e){}
+            }
+        }, 15000);
     }
 
     function getPairLabel(pair) {
@@ -1760,6 +1794,7 @@
     }
 
     function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(updateSyncTimer, 200);
     }
 
@@ -1871,7 +1906,9 @@
 
     logoutConfirmBtn.addEventListener('click', () => {
         clearInterval(timerInterval);
-        
+        if (pingInterval) clearInterval(pingInterval);
+        if (wsSocket) wsSocket.close();
+
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
 
