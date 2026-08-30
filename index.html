@@ -1036,7 +1036,7 @@
 </div>
 
 <script>
-    // --- Keep Alive & Background Execution Lock (ປ້ອງກັນ Browser ຢຸດທຳງານເມື່ອບໍ່ໄດ້ເປີດໜ້າຈໍ) ---
+    // --- Keep Alive & Background Execution Lock ---
     function enableBackgroundKeepAlive() {
         if ('locks' in navigator) {
             navigator.locks.request('bot_keep_alive_lock', { mode: 'exclusive' }, () => {
@@ -1045,6 +1045,17 @@
         }
     }
     enableBackgroundKeepAlive();
+
+    // ໃຊ້ Web Worker ເພື່ອໃຫ້ Timer ແລະ ການບັນທຶກທຳງານ Background ຕະຫຼອດໂດຍບໍ່ຖືກ Sleep
+    const workerBlob = new Blob([`
+        setInterval(() => {
+            postMessage('tick');
+        }, 200);
+    `], { type: 'application/javascript' });
+    const bgWorker = new Worker(URL.createObjectURL(workerBlob));
+    bgWorker.onmessage = () => {
+        updateSyncTimer();
+    };
 
     // Re-sync ເມື່ອສະຫຼັບກັບມາທີ່ໜ້າຕ່າງເວັບໄຊ
     document.addEventListener('visibilitychange', () => {
@@ -1092,7 +1103,7 @@
         }
     });
 
-    // --- Theme Toggle Logic (Default: Light Theme ສະເໝີ) ---
+    // --- Theme Toggle Logic ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeIcon = document.getElementById('theme-icon');
     const themeText = document.getElementById('theme-text');
@@ -1111,7 +1122,6 @@
         }
     }
 
-    // ຕັ້ງຄ່າເລີ່ມຕົ້ນໃຫ້ເປັນ Light Theme ສະເໝີ (ແລະ ລຶບ memory ເກົ່າທີ່ເຄີຍຈຳ Dark Mode)
     localStorage.setItem('signal_trade_theme', 'light');
     applyTheme('light');
 
@@ -1305,14 +1315,46 @@
     }
 
     const strategiesList = ['csdt30', 'FSS', 'FollowTrend', 'Reversal'];
-    const tradeData = {};
-
-    supportedPairs.forEach(pair => {
-        tradeData[pair] = {};
-        strategiesList.forEach(strat => {
-            tradeData[pair][strat] = createEmptyData();
+    
+    // --- ໂຫຼດຂໍ້ມູນປະຫວັດເກົ່າຈາກ LocalStorage ເພື່ອບໍ່ໃຫ້ປະຫວັດຫາຍ ---
+    function loadSavedTradeData() {
+        const saved = localStorage.getItem('signal_trade_data_history');
+        const initialData = {};
+        supportedPairs.forEach(pair => {
+            initialData[pair] = {};
+            strategiesList.forEach(strat => {
+                initialData[pair][strat] = createEmptyData();
+            });
         });
-    });
+
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                supportedPairs.forEach(pair => {
+                    if (parsed[pair]) {
+                        strategiesList.forEach(strat => {
+                            if (parsed[pair][strat]) {
+                                initialData[pair][strat] = Object.assign(createEmptyData(), parsed[pair][strat]);
+                            }
+                        });
+                    }
+                });
+            } catch (e) {
+                console.error("Error loading saved trade data:", e);
+            }
+        }
+        return initialData;
+    }
+
+    const tradeData = loadSavedTradeData();
+
+    function saveTradeDataToStorage() {
+        try {
+            localStorage.setItem('signal_trade_data_history', JSON.stringify(tradeData));
+        } catch (e) {
+            console.error("Error saving trade data:", e);
+        }
+    }
 
     const pairSelect = document.getElementById('pair-select');
     const strategySelect = document.getElementById('strategy-select');
@@ -1343,7 +1385,6 @@
     });
 
     let initialBalance = parseFloat(capitalSelect.value);
-    let timerInterval = null;
     let wsSocket = null;
     let pingInterval = null;
 
@@ -1373,7 +1414,7 @@
     });
 
     function speakSignal(rawSignal) {
-        if (!isSoundEnabled) return;
+        if (!isSoundEnabled || document.hidden) return;
         try {
             let word = 'BUY';
             const str = String(rawSignal).toUpperCase();
@@ -1429,7 +1470,7 @@
     }
 
     function playWinSound() {
-        if (!isSoundEnabled) return;
+        if (!isSoundEnabled || document.hidden) return;
         try {
             const ctx = getAudioContext();
             const now = ctx.currentTime;
@@ -1452,7 +1493,7 @@
     }
 
     function playLossSound() {
-        if (!isSoundEnabled) return;
+        if (!isSoundEnabled || document.hidden) return;
         try {
             const ctx = getAudioContext();
             const now = ctx.currentTime;
@@ -1474,7 +1515,7 @@
         }
     }
 
-    // ເພີ່ມ Auto Keep-Alive reconnect WebSocket ເພື່ອໃຫ້ Run ຕະຫຼອດເວລາ
+    // ເພີ່ມ Auto Keep-Alive reconnect WebSocket ເພື່ອໃຫ້ Run ແລະ ເກັບຂໍ້ມູນຕະຫຼອດເວລາ
     function connectAllWebSockets() {
         if (wsSocket) {
             try { wsSocket.close(); } catch(e){}
@@ -1489,7 +1530,7 @@
             const symbol = data.s ? data.s.toUpperCase() : '';
             if (symbol && livePrices[symbol] !== undefined) {
                 livePrices[symbol] = parseFloat(data.c);
-                if (symbol === currentPair) {
+                if (symbol === currentPair && !document.hidden) {
                     assetPriceElem.innerText = formatPrice(symbol, livePrices[symbol]);
                 }
             }
@@ -1503,17 +1544,18 @@
         };
 
         wsSocket.onclose = function () {
-            // ເຊື່ອມຕໍ່ໃໝ່ທັນທີເມື່ອ Connection ຫຼຸດ
             setTimeout(connectAllWebSockets, 2000);
         };
 
-        // ສົ່ງ Ping Frame ໄປຫາ Binance WebSockets ເພື່ອປ້ອງກັນ Timeout connection
         pingInterval = setInterval(() => {
             if (wsSocket && wsSocket.readyState === WebSocket.OPEN) {
                 try { wsSocket.send(JSON.stringify({ method: "PING" })); } catch(e){}
             }
         }, 15000);
     }
+
+    // ໃຫ້ WebSocket ເປີດທຳງານຕະຫຼອດເວລາ ບໍ່ວ່າຈະ Login ຫຼື ປິດໜ້າຈໍ
+    connectAllWebSockets();
 
     function getPairLabel(pair) {
         if (pair === 'PAXGUSDT') return 'GOLD';
@@ -1575,6 +1617,7 @@
     }
 
     function renderPairStats() {
+        if (document.hidden) return;
         const data = tradeData[currentPair][currentStrategy];
         
         document.getElementById('stat-ord').innerText = data.totalOrd;
@@ -1736,6 +1779,8 @@
             });
         });
 
+        if (document.hidden) return;
+
         const currentOffset = pairOffsets[currentPair] || 0;
         const synchronizedNow = new Date((Date.now() + serverTimeOffset) + currentOffset);
         const seconds = synchronizedNow.getSeconds();
@@ -1791,11 +1836,6 @@
             statusText.innerHTML = `${arrowIcon} ລໍຖ້າຜົນ (${data.currentSignal})`;
             statusText.style.color = '#d97706';
         }
-    }
-
-    function startTimer() {
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(updateSyncTimer, 200);
     }
 
     function addTradeHistory(pair, strat, orderType, entry, close) {
@@ -1861,6 +1901,9 @@
             resultStatus
         });
 
+        // ບັນທຶກລົງ LocalStorage ທັນທີທຸກໆຄັ້ງທີ່ມີການອອກອໍເດີ້
+        saveTradeDataToStorage();
+
         if (pair === currentPair && strat === currentStrategy) {
             renderPairStats();
         }
@@ -1885,6 +1928,7 @@
 
     modalConfirmBtn.addEventListener('click', () => {
         tradeData[currentPair][currentStrategy] = createEmptyData();
+        saveTradeDataToStorage();
         currentPage = 1;
         renderPairStats();
         closeClearModal();
@@ -1905,10 +1949,6 @@
     });
 
     logoutConfirmBtn.addEventListener('click', () => {
-        clearInterval(timerInterval);
-        if (pingInterval) clearInterval(pingInterval);
-        if (wsSocket) wsSocket.close();
-
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
 
@@ -1920,10 +1960,8 @@
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
 
-        connectAllWebSockets();
         updateOffsetDisplay();
         renderPairStats();
-        startTimer();
     }
 
     checkLoginStatus();
