@@ -4,56 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daimoney Signal pro</title>
-    <!-- ໂຫຼດ FontAwesome ສຳລັບໄອຄອນ Crypto ແລະຖັງຂຍະ -->
+    <!-- ໂຫຼດ FontAwesome ສຳລັບໄອຄອນ -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- ໂຫຼດ Noto Sans Lao ຈາກ Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* ຕັ້ງຄ່າ Default ໃຫ້ເປັນ Theme ສີຂາວ (Light Theme) */
+        /* Modern Clean Color Palette */
         :root {
-            --bg-color: #e5e9f0;
-            --panel-bg: #f4f6f9;
-            --card-bg: #eaeff5;
-            --display-bg: #eef2f7;
-            --text-color: #1e293b;
-            --text-sub: #526075;
-            --border-color: #cbd5e1;
-            --border-light: #dbe2ec;
+            --bg-color: #f1f5f9;
+            --panel-bg: #ffffff;
+            --card-bg: #f8fafc;
+            --display-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
             --input-bg: #f8fafc;
-            --modal-bg: #f8fafc;
-            --table-header-bg: #e2e8f0;
-            --badge-bg: linear-gradient(135deg, #e2e8f0 0%, #dbe2ec 100%);
-            --metrics-bg: #e5eaf1;
-            --status-bg: #dbe2ec;
-            --status-text: #1e293b;
+            --modal-bg: #ffffff;
+            --table-header-bg: #f1f5f9;
+            --primary-accent: #2563eb;
+            --status-bg: #f8fafc;
+            --status-text: #0f172a;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --radius-lg: 16px;
+            --radius-md: 10px;
         }
 
         /* Dark Theme Style */
         body.dark-theme {
-            --bg-color: #0d1117;
-            --panel-bg: #121820;
-            --card-bg: #1a222d;
-            --display-bg: #18202c;
-            --text-color: #ffffff;
-            --text-sub: #8b9bb4;
-            --border-color: #363c4e;
-            --border-light: #2a3441;
-            --input-bg: #0d1117;
-            --modal-bg: #18202c;
-            --table-header-bg: #121820;
-            --badge-bg: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
-            --metrics-bg: #111822;
-            --status-bg: #1e293b;
-            --status-text: #cbd5e1;
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --card-bg: #0f172a;
+            --display-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #334155;
+            --border-light: #1e293b;
+            --input-bg: #0f172a;
+            --modal-bg: #1e293b;
+            --table-header-bg: #0f172a;
+            --primary-accent: #3b82f6;
+            --status-bg: #0f172a;
+            --status-text: #f8fafc;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
         }
 
         * { 
             box-sizing: border-box; 
-            font-family: 'Noto Sans Lao', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Noto Sans Lao', system-ui, -apple-system, sans-serif; 
         }
         html, body {
             width: 100%;
@@ -69,13 +73,9 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Responsive Frame for Mobile View */
-        body.mobile-view-active {
-            background-color: #cbd5e1 !important;
-        }
-        body.dark-theme.mobile-view-active {
-            background-color: #05070a !important;
-        }
+        /* Responsive Frame Wrappers */
+        body.mobile-view-active { background-color: #cbd5e1 !important; }
+        body.dark-theme.mobile-view-active { background-color: #020617 !important; }
         body.mobile-view-active .login-panel,
         body.mobile-view-active .bot-panel {
             max-width: 414px !important;
@@ -83,16 +83,11 @@
             max-height: 92vh !important;
             border-radius: 28px !important;
             border: 8px solid var(--border-color) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
         }
 
-        /* Responsive Frame for Tablet (iPad) View */
-        body.tablet-view-active {
-            background-color: #cbd5e1 !important;
-        }
-        body.dark-theme.tablet-view-active {
-            background-color: #05070a !important;
-        }
+        body.tablet-view-active { background-color: #cbd5e1 !important; }
+        body.dark-theme.tablet-view-active { background-color: #020617 !important; }
         body.tablet-view-active .login-panel,
         body.tablet-view-active .bot-panel {
             max-width: 768px !important;
@@ -100,19 +95,15 @@
             max-height: 95vh !important;
             border-radius: 28px !important;
             border: 8px solid var(--border-color) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
         }
 
         /* Login Container */
         .login-panel {
             width: 100%;
             height: 100%;
-            max-width: none;
             background-color: var(--panel-bg);
-            border: none;
-            border-radius: 0;
-            padding: 24px;
-            box-shadow: none;
+            padding: 32px 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -120,89 +111,47 @@
             text-align: center;
             transition: all 0.3s ease-in-out;
         }
-        .login-inner {
-            width: 100%;
-            max-width: 420px;
-        }
-        .login-logo {
-            font-size: 48px;
-            margin-bottom: 12px;
-            color: #059669;
-        }
-        .login-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: var(--text-color);
-        }
-        .login-desc {
-            font-size: 13px;
-            color: var(--text-sub);
-            margin-bottom: 24px;
-        }
-        .form-group {
-            margin-bottom: 16px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--text-sub);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
+        .login-inner { width: 100%; max-width: 360px; }
+        .login-logo { font-size: 52px; margin-bottom: 16px; color: #10b981; }
+        .login-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .login-desc { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; }
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 6px; font-weight: 600; }
         .form-control {
             width: 100%;
             background: var(--input-bg);
             color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
         }
-        .form-control:focus {
-            border-color: #059669;
-        }
+        .form-control:focus { border-color: var(--primary-accent); }
         .login-btn {
             width: 100%;
-            background: linear-gradient(135deg, #059669 0%, #0284c7 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #ffffff;
             border: none;
-            border-radius: 8px;
-            padding: 13px;
-            font-weight: bold;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-weight: 700;
             font-size: 14px;
             cursor: pointer;
-            text-transform: uppercase;
             margin-top: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
             transition: all 0.2s;
         }
-        .login-btn:hover {
-            filter: brightness(1.05);
-            transform: translateY(-1px);
-        }
-        .error-msg {
-            color: #dc2626;
-            font-size: 12px;
-            margin-top: 10px;
-            display: none;
-            font-weight: 600;
-        }
+        .login-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+        .error-msg { color: #ef4444; font-size: 12px; margin-top: 12px; display: none; font-weight: 600; }
 
         /* Main Bot Panel */
         .bot-panel {
             width: 100%;            
             height: 100%;            
-            max-width: none;         
             background-color: var(--panel-bg);
-            border: none;
-            border-radius: 0;
-            padding: 16px;
-            box-shadow: none;
-            position: relative;
+            padding: 20px;
             display: none; 
             flex-direction: column;
             overflow-y: auto;
@@ -215,80 +164,59 @@
             justify-content: space-between; 
             align-items: center; 
             font-size: 16px; 
-            font-weight: bold; 
-            margin-bottom: 12px; 
-            color: var(--text-color);
+            font-weight: 800; 
+            margin-bottom: 16px; 
         }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .settings-toggle-btn {
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .settings-toggle-btn, .close-btn {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            color: #0284c7;
-            border-radius: 6px;
-            width: 34px;
-            height: 34px;
+            color: var(--text-sub);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .settings-toggle-btn:hover {
-            filter: brightness(1.1);
-            border-color: #0284c7;
-        }
-        .close-btn { 
-            color: #dc2626; 
-            cursor: pointer; 
-            font-size: 16px; 
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-        }
+        .settings-toggle-btn:hover { color: var(--primary-accent); border-color: var(--primary-accent); }
+        .close-btn:hover { color: #ef4444; border-color: #ef4444; }
 
         /* Stats Bar Top */
         .stats-top { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 12px; 
+            font-size: 11px; 
             background: var(--card-bg); 
             padding: 10px 14px; 
-            border-radius: 8px; 
-            margin-bottom: 12px; 
-            color: var(--text-color);
-            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); 
+            margin-bottom: 14px; 
+            border: 1px solid var(--border-color);
+            font-weight: 600;
         }
         .stats-top span { color: var(--text-sub); }
-        .val-win { color: #16a34a; font-weight: bold; }
-        .val-loss { color: #dc2626; font-weight: bold; }
-        .val-draw { color: #64748b; font-weight: bold; }
+        .val-win { color: #10b981; font-weight: 700; }
+        .val-loss { color: #ef4444; font-weight: 700; }
+        .val-draw { color: #64748b; font-weight: 700; }
 
         /* Capital & Balance Box */
         .account-info { 
             display: flex; 
-            justify-content: space-between; 
             gap: 10px; 
-            margin-bottom: 12px; 
-            font-size: 12px; 
+            margin-bottom: 14px; 
+            font-size: 11px; 
         }
         .acc-box { 
             background: var(--card-bg); 
-            padding: 10px; 
-            border-radius: 8px; 
+            padding: 10px 12px; 
+            border-radius: var(--radius-md); 
             flex: 1; 
             text-align: center; 
             color: var(--text-sub);
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--border-color);
             font-weight: 600;
         }
         .acc-box select { 
@@ -296,262 +224,149 @@
             color: var(--text-color); 
             border: 1px solid var(--border-color); 
             border-radius: 6px; 
-            padding: 4px 6px; 
+            padding: 4px; 
             width: 100%; 
-            margin-top: 6px; 
+            margin-top: 4px; 
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
+            outline: none;
         }
-        .profit-val { color: #16a34a; font-weight: bold; font-size: 15px; }
-        .balance-val { color: #16a34a; font-weight: bold; font-size: 15px; }
+        .profit-val, .balance-val { font-weight: 800; font-size: 14px; margin-top: 4px; display: block; }
+        .profit-val { color: #10b981; }
+        .balance-val { color: #10b981; }
 
-        /* Setup Buttons & Controls */
+        /* Controls Row */
         .setup-btns { 
             display: flex; 
             gap: 8px; 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             align-items: center;
         }
-
         .asset-select, .strategy-select, .setup-btn {
             flex: 1;
-            height: 44px;
+            height: 40px;
             font-size: 12px;
             font-weight: 700;
-            border-radius: 8px;
-            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 0 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .asset-select, .strategy-select {
-            background: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            text-align-last: center;
-        }
-        .asset-select option, .strategy-select option {
-            background: var(--panel-bg);
-            color: var(--text-color);
-            padding: 10px;
-        }
-
-        .btn-neutral-custom { 
-            background: var(--card-bg) !important; 
-            color: var(--text-color) !important;
-            border: 1px solid var(--border-color) !important;
-        }
-
-        .asset-select {
-            background: #f59e0b !important;
-            color: #ffffff !important;
-            border-color: #d97706 !important;
-        }
-
-        #toggle-history-btn {
-            background: #10b981 !important;
-            color: #ffffff !important;
-            border-color: #059669 !important;
-        }
-
-        .strategy-select {
-            background: #10b981 !important;
-            color: #ffffff !important;
-            border-color: #059669 !important;
-        }
-
-        #clear-btn {
-            background: #ef4444 !important;
-            color: #ffffff !important;
-            border-color: #dc2626 !important;
-        }
-
-        .asset-select:hover, .strategy-select:hover, .setup-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            filter: brightness(1.05);
-        }
-
-        /* Offset Controller (Default: hidden) */
-        .offset-control {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 12px;
-            color: var(--text-sub);
-            border: 1px solid var(--border-light);
-            font-weight: 600;
-        }
-        .offset-btns {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-        .offset-btns button {
-            background: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 5px 10px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: bold;
             transition: all 0.2s;
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
         }
-
-        .btn-save-offset {
-            background: var(--border-color) !important;
-            color: var(--text-color) !important;
-        }
+        .asset-select { border-color: #f59e0b; color: #f59e0b; }
+        .strategy-select { border-color: #10b981; color: #10b981; }
+        .setup-btn:hover { background: var(--border-light); }
+        #clear-btn { color: #ef4444; }
 
         .sub-note { 
             font-size: 11px; 
             color: var(--text-sub); 
             text-align: center; 
-            margin-bottom: 12px; 
-            font-weight: 600;
+            margin-bottom: 14px; 
+            font-weight: 500;
         }
 
-        /* Display Area */
+        /* DISPLAY AREA (CLEAN REDESIGN) */
         .display-area { 
-            background: var(--display-bg); 
-            border-radius: 12px; 
-            padding: 14px; 
-            margin-bottom: 12px; 
-            border: 1px solid var(--border-light);
+            background: var(--card-bg); 
+            border-radius: var(--radius-lg); 
+            padding: 16px; 
+            margin-bottom: 16px; 
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
         }
 
         .graph-badge-box {
             display: flex;
-            flex-direction: row;
-            align-items: center;
             justify-content: space-between;
-            width: 100%;
-            background: var(--badge-bg);
-            border: 1px solid #3b82f6;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 12px;
-        }
-        .graph-badge-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #3b82f6;
-        }
-        .price-box-left {
-            display: flex;
-            flex-direction: row;
             align-items: center;
-            justify-content: flex-start;
-            gap: 14px;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .crypto-profile-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
         }
         .crypto-icon-wrap {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(125,125,125,0.12);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            flex-shrink: 0;
+            font-size: 24px;
+            box-shadow: var(--shadow-sm);
         }
-        .price-box-info {
+        .crypto-info-stack {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             gap: 2px;
         }
-        .price-box-right {
-            text-align: right;
-        }
         .pair-title-text {
-            font-size: 20px;
-            font-weight: 900;
+            font-size: 14px;
+            font-weight: 800;
             color: var(--text-color);
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 8px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            gap: 6px;
+            letter-spacing: 0.5px;
         }
         #asset-price {
-            color: #10b981 !important;
-            font-weight: 900 !important;
-            font-size: 28px !important;
-            line-height: 1.2;
-            letter-spacing: 1px;
+            color: #10b981;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: 0.5px;
         }
 
-        /* CANDLE 30s ແລະ WIN RATE */
-        .metrics-row {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: var(--metrics-bg);
-            padding: 14px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--border-light);
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .analyze-box, .winrate-box {
-            text-align: center;
+        .timer-center-item {
             flex: 1;
+            text-align: center;
         }
 
-        .analyze-box span:first-child, 
-        .winrate-box span:first-child {
-            font-size: 14px !important;
-            font-weight: bold;
+        .metrics-right {
+            flex: 1;
+            text-align: right;
+        }
+
+        .metric-item .label-text {
+            font-size: 10px;
+            font-weight: 700;
             color: var(--text-sub);
+            letter-spacing: 0.5px;
         }
 
         .analyze-val { 
-            font-size: 36px !important; 
-            font-weight: 900;
-            color: #10b981; 
+            font-size: 24px; 
+            font-weight: 800;
+            color: #ff4d4d; 
             line-height: 1.2;
+            text-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
         }
-
         .winrate-val { 
-            font-size: 36px !important; 
-            font-weight: 900;
+            font-size: 22px; 
+            font-weight: 800;
             color: #f59e0b; 
             line-height: 1.2;
         }
 
         .live-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background-color: #10b981;
             border-radius: 50%;
             display: inline-block;
-            box-shadow: 0 0 8px #10b981;
+            box-shadow: 0 0 6px #10b981;
             animation: pulse-dot 1.5s infinite;
         }
         @keyframes pulse-dot {
@@ -560,7 +375,6 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Color classes for icons */
         .btc-color { color: #f7931a; }
         .eth-color { color: #627eea; }
         .sui-color { color: #0284c7; }
@@ -570,86 +384,75 @@
         .doge-color { color: #c2a633; }
         .trx-color { color: #ef0027; }
         .gold-color { color: #ffd700; }
+        .silver-color { color: #c0c0c0; }
 
-        /* Signal Status Banner */
         .signal-status { 
-            background: var(--status-bg); 
+            background: var(--panel-bg); 
             text-align: center; 
-            padding: 16px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            font-size: 16px; 
-            letter-spacing: 0.5px; 
-            color: var(--status-text); 
+            padding: 14px; 
+            border-radius: var(--radius-md); 
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            border: 2px solid transparent; 
-            transition: all 0.3s ease-in-out;
+            gap: 4px;
+            border: 1px solid var(--border-color); 
+            transition: all 0.3s ease;
         }
         
         .signal-status.bg-buy { 
             background: #10b981 !important; 
-            border-color: #34d399 !important; 
+            border-color: #10b981 !important; 
             color: #ffffff !important; 
         }
         .signal-status.bg-sell { 
             background: #ef4444 !important; 
-            border-color: #f87171 !important; 
+            border-color: #ef4444 !important; 
             color: #ffffff !important; 
         }
 
         .phase-tag {
-            font-size: 12px;
-            color: #0284c7;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 11px;
+            color: var(--text-sub);
+            letter-spacing: 0.5px;
             font-weight: 700;
         }
+        .signal-status.bg-buy .phase-tag,
+        .signal-status.bg-sell .phase-tag { color: rgba(255,255,255,0.8); }
 
         .signal-text-large {
-            font-size: 26px !important;
-            font-weight: 900 !important;
-            letter-spacing: 1.5px !important;
-            text-transform: uppercase;
+            font-size: 20px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        /* History Wrapper */
         #history-wrapper { 
             display: none; 
             flex-direction: column;
             flex: 1;
-            min-height: 220px;
+            min-height: 200px;
         }
-
-        .history-container {
-            flex: 1;
-            overflow-y: auto;
-            max-height: 180px;
-        }
+        .history-container { flex: 1; overflow-y: auto; max-height: 180px; }
         .history-header { 
             display: flex; 
             justify-content: space-between; 
             font-size: 11px; 
             margin-bottom: 8px; 
-            font-weight: bold; 
-            color: var(--text-color);
+            font-weight: 700; 
+            color: var(--text-sub);
         }
         .history-table { 
             width: 100%; 
             border-collapse: collapse; 
             font-size: 11px; 
             text-align: center; 
-            color: var(--text-color);
         }
         .history-table th { 
             color: var(--text-sub); 
-            padding: 6px; 
-            border-bottom: 1px solid var(--border-light); 
+            padding: 8px 4px; 
+            border-bottom: 1px solid var(--border-color); 
             position: sticky;
             top: 0;
             background: var(--table-header-bg);
@@ -657,23 +460,21 @@
         }
         .history-table td { 
             padding: 8px 4px; 
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-color);
             font-weight: 600;
         }
-        .order-buy { color: #16a34a; font-weight: bold; }
-        .order-sell { color: #dc2626; font-weight: bold; }
-        .res-win { color: #16a34a; font-weight: bold; }
-        .res-loss { color: #dc2626; font-weight: bold; }
-        .res-draw { color: #64748b; font-weight: bold; }
+        .order-buy { color: #10b981; font-weight: 700; }
+        .order-sell { color: #ef4444; font-weight: 700; }
+        .res-win { color: #10b981; font-weight: 700; }
+        .res-loss { color: #ef4444; font-weight: 700; }
+        .res-draw { color: #64748b; font-weight: 700; }
 
-        /* Pagination Styling */
         .pagination-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             margin-top: 10px;
-            padding-bottom: 10px;
         }
         .page-btn {
             background: var(--card-bg);
@@ -681,99 +482,56 @@
             color: var(--text-color);
             padding: 4px 10px;
             font-size: 11px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
             font-weight: 600;
         }
         .page-btn.active {
-            background: #10b981;
+            background: var(--primary-accent);
             color: #ffffff;
-            border-color: #10b981;
-            font-weight: bold;
+            border-color: var(--primary-accent);
         }
 
-        /* Modal */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.5);
             backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 999; opacity: 0; visibility: hidden;
             transition: all 0.25s ease-in-out;
         }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card {
             background: var(--modal-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            width: 340px;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transform: scale(0.9);
-            transition: transform 0.25s ease-in-out;
+            border-radius: var(--radius-lg);
+            width: 320px; padding: 20px;
+            text-align: center; box-shadow: var(--shadow-md);
+            transform: scale(0.95); transition: transform 0.25s ease-in-out;
         }
         .modal-overlay.active .modal-card { transform: scale(1); }
         .modal-icon {
-            font-size: 36px;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-            width: 64px;
-            height: 64px;
-            line-height: 64px;
-            border-radius: 50%;
-            margin: 0 auto 14px auto;
+            font-size: 32px; color: #ef4444; background: rgba(239, 68, 68, 0.1);
+            width: 56px; height: 56px; line-height: 56px; border-radius: 50%;
+            margin: 0 auto 12px auto;
         }
-        .modal-title { font-size: 16px; font-weight: bold; color: var(--text-color); margin-bottom: 8px; }
-        .modal-desc { font-size: 12px; color: var(--text-sub); line-height: 1.5; margin-bottom: 16px; font-weight: 600; }
-        .modal-btns { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .modal-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .modal-desc { font-size: 12px; color: var(--text-sub); line-height: 1.5; margin-bottom: 16px; }
+        .modal-btns { display: flex; gap: 8px; }
+        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
         .modal-btn-confirm { background: #ef4444; color: #fff; }
         .modal-btn-cancel { background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); }
 
-        /* Settings Modal Specific List */
         .setting-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border-light);
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-color);
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--card-bg); padding: 10px 12px; border-radius: 8px;
+            margin-bottom: 8px; border: 1px solid var(--border-color); font-size: 12px; font-weight: 600;
         }
         .setting-action-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-        .setting-action-btn:hover {
-            filter: brightness(1.1);
-            border-color: #0284c7;
+            background: var(--panel-bg); border: 1px solid var(--border-color);
+            color: var(--text-color); border-radius: 6px; padding: 4px 8px;
+            font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;
         }
     </style>
 </head>
@@ -808,11 +566,10 @@
     <div class="header">
         <span>🤖 Daimoney Signal pro</span>
         <div class="header-right">
-            <!-- ປຸ່ມການຕັ້ງຄ່າໃຫມ່ -->
             <button class="settings-toggle-btn" id="settings-open-btn" title="ການຕັ້ງຄ່າ">
                 <i class="fa-solid fa-gear"></i>
             </button>
-            <span class="close-btn" id="logout-btn" title="ອອກຈາກລະບົບ">❌</span>
+            <span class="close-btn" id="logout-btn" title="ອອກຈາກລະບົບ"><i class="fa-solid fa-xmark"></i></span>
         </div>
     </div>
 
@@ -829,7 +586,7 @@
     <!-- Account Info -->
     <div class="account-info">
         <div class="acc-box">
-            <span>CAPITAL ($)</span><br>
+            <span>CAPITAL ($)</span>
             <select id="capital-select">
                 <option value="1000">1,000</option>
                 <option value="2000" selected>2,000</option>
@@ -838,16 +595,16 @@
             </select>
         </div>
         <div class="acc-box">
-            <span>PROFIT/LOSS</span><br>
+            <span>PROFIT/LOSS</span>
             <span class="profit-val" id="total-profit">+$0.00</span>
         </div>
         <div class="acc-box">
-            <span>BALANCE</span><br>
+            <span>BALANCE</span>
             <span class="balance-val" id="total-balance">$2,000.00</span>
         </div>
     </div>
 
-    <!-- Setup Buttons / Asset & Strategy Selector -->
+    <!-- Controls -->
     <div class="setup-btns">
         <select id="pair-select" class="asset-select">
             <option value="BTCUSDT" selected>⚡ BTC/USDT</option>
@@ -859,9 +616,10 @@
             <option value="DOGEUSDT">⚡ DOGE/USDT</option>
             <option value="TRXUSDT">⚡ TRX/USDT</option>
             <option value="PAXGUSDT">🥇 GOLD/USDT</option>
+            <option value="XAGUSDT">🥈 SILVER/USDT</option>
         </select>
 
-        <button id="toggle-history-btn" class="setup-btn btn-neutral-custom">📜 HISTORY</button>
+        <button id="toggle-history-btn" class="setup-btn">📜 HISTORY</button>
         
         <select id="strategy-select" class="strategy-select">
             <option value="csdt30" selected>🎯 csdt30</option>
@@ -870,17 +628,7 @@
             <option value="Reversal">🎯 Reversal</option>
         </select>
 
-        <button id="clear-btn" class="setup-btn btn-neutral-custom" title="CLEAR HISTORY">🗑️ CLEAR</button>
-    </div>
-
-    <!-- Fine-Tune Time Sync Control -->
-    <div class="offset-control" id="offset-control-panel">
-        <span>⏱️ SYNC TIME (<span id="current-pair-label">BTC</span>): <b id="offset-val-text" style="color:#10b981;">-6s</b></span>
-        <div class="offset-btns">
-            <button id="btn-sub-sec">-1s</button>
-            <button id="btn-add-sec">+1s</button>
-            <button id="btn-save-offset" class="btn-save-offset" title="SAVE OFFSET">💾 SAVE</button>
-        </div>
+        <button id="clear-btn" class="setup-btn" title="CLEAR HISTORY">🗑️ CLEAR</button>
     </div>
 
     <div class="sub-note">*Please pick all 3 targets before starting</div>
@@ -888,31 +636,28 @@
     <!-- Display & Analysis Area -->
     <div class="display-area">
         <div class="graph-badge-box">
-            <div class="price-box-left">
+            <div class="crypto-profile-left">
                 <div class="crypto-icon-wrap" id="crypto-icon-box">
                     <i class="fa-brands fa-bitcoin btc-color"></i>
                 </div>
-                <div class="price-box-info"> 
+                <div class="crypto-info-stack">
                     <span class="pair-title-text" id="price-title">
                         BTC/USDT <i class="live-dot" title="Live Stream Active"></i>
                     </span>
-                    <span style="font-size:11px; color:var(--text-sub); font-weight: bold; margin-top:2px;">LIVE PRICE</span>
+                    <span id="asset-price">$0.00</span>
                 </div>
             </div>
-            <div class="price-box-right">
-                <span id="asset-price">$0.00</span>
-            </div>
-        </div>
 
-        <!-- CANDLE 30s ແລະ WIN RATE -->
-        <div class="metrics-row">
-            <div class="analyze-box">
-                <span>📊 CANDLE 30s</span><br>
+            <div class="timer-center-item metric-item">
+                <span class="label-text">CANDLE 30S</span><br>
                 <span class="analyze-val" id="timer">30</span>
             </div>
-            <div class="winrate-box">
-                <span>WIN RATE</span><br>
-                <span class="winrate-val" id="win-rate">0.0%</span>
+            
+            <div class="metrics-right">
+                <div class="metric-item">
+                    <span class="label-text">WIN RATE</span><br>
+                    <span class="winrate-val" id="win-rate">0.0%</span>
+                </div>
             </div>
         </div>
         
@@ -927,7 +672,7 @@
     <div id="history-wrapper">
         <div class="history-header">
             <span>📋 HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#10b981;">csdt30</span>)</span>
-            <span style="color:#0284c7;">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
+            <span style="color:var(--primary-accent);">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
         </div>
 
         <div class="history-container">
@@ -943,26 +688,23 @@
                         <th>RESULT</th>
                     </tr>
                 </thead>
-                <tbody id="history-rows">
-                </tbody>
+                <tbody id="history-rows"></tbody>
             </table>
         </div>
-        <!-- Pagination Controls -->
         <div class="pagination-container" id="pagination-controls"></div>
     </div>
 </div>
 
-<!-- Custom Settings Modal Box (ການຕັ້ງຄ່າ) -->
+<!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal">
     <div class="modal-card">
-        <div class="modal-icon" style="color: #0284c7; background: rgba(2, 132, 199, 0.1);">
+        <div class="modal-icon" style="color: var(--primary-accent); background: rgba(59, 130, 246, 0.1);">
             <i class="fa-solid fa-sliders"></i>
         </div>
         <div class="modal-title">ການຕັ້ງຄ່າ (SETTINGS)</div>
         <div class="modal-desc">ປັບแต่งລະບົບຕາມຄວາມຕ້ອງການ</div>
 
         <div style="margin-bottom: 16px; text-align: left;">
-            <!-- ປັບ Theme -->
             <div class="setting-list-item">
                 <span>ໂໝດສີ (Theme):</span>
                 <button class="setting-action-btn" id="theme-toggle-btn">
@@ -971,30 +713,19 @@
                 </button>
             </div>
 
-            <!-- ປັບມຸມມອງ View Mode -->
             <div class="setting-list-item">
                 <span>ມຸມມອງ (View Mode):</span>
                 <button class="setting-action-btn" id="view-mode-toggle-btn">
-                    <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon" style="color:#059669;"></i>
+                    <i class="fa-solid fa-mobile-screen-button" id="view-mode-icon" style="color:#10b981;"></i>
                     <span id="view-mode-text">ມຸມມອງມືຖື</span>
                 </button>
             </div>
 
-            <!-- ເປີດ/ປິດ ສຽງ -->
             <div class="setting-list-item">
                 <span>ສຽງແຈ້ງເຕືອນ (Sound):</span>
                 <button class="setting-action-btn" id="sound-toggle-btn">
                     <span id="sound-icon">🔊</span>
                     <span id="sound-text">ເປີດສຽງ</span>
-                </button>
-            </div>
-
-            <!-- ປຸ່ມສະແດງ / ຊ່ອນ ການປັບເວລາ Sync Time -->
-            <div class="setting-list-item">
-                <span>ປັບເວລາ (Sync Time):</span>
-                <button class="setting-action-btn" id="sync-time-toggle-btn">
-                    <i class="fa-solid fa-stopwatch" id="sync-time-icon" style="color:#ef4444;"></i>
-                    <span id="sync-time-text">ປິດຢູ່</span>
                 </button>
             </div>
         </div>
@@ -1005,7 +736,7 @@
     </div>
 </div>
 
-<!-- Custom Modal Box (Clear Data) -->
+<!-- Clear Modal -->
 <div class="modal-overlay" id="clear-modal">
     <div class="modal-card">
         <div class="modal-icon"><i class="fa-solid fa-trash-can"></i></div>
@@ -1020,14 +751,12 @@
     </div>
 </div>
 
-<!-- Custom Modal Box (Logout) -->
+<!-- Logout Modal -->
 <div class="modal-overlay" id="logout-modal">
     <div class="modal-card">
         <div class="modal-icon" style="color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i></div>
         <div class="modal-title">ອອກຈາກລະບົບ</div>
-        <div class="modal-desc">
-            ທ່ານຕ້ອງການອອກຈາກລະບົບແທ້ບໍ?
-        </div>
+        <div class="modal-desc">ທ່ານຕ້ອງການອອກຈາກລະບົບແທ້ບໍ?</div>
         <div class="modal-btns">
             <button class="modal-btn modal-btn-cancel" id="logout-cancel-btn">ຍົກເລີກ</button>
             <button class="modal-btn modal-btn-confirm" id="logout-confirm-btn">ຕົກລົງ</button>
@@ -1036,63 +765,30 @@
 </div>
 
 <script>
-    // --- Keep Alive & Background Execution Lock (ປ້ອງກັນ Browser ຢຸດທຳງານເມື່ອບໍ່ໄດ້ເປີດໜ້າຈໍ) ---
     function enableBackgroundKeepAlive() {
         if ('locks' in navigator) {
             navigator.locks.request('bot_keep_alive_lock', { mode: 'exclusive' }, () => {
-                return new Promise(() => {}); // ຖື Lock ໄວ້ຕະຫຼອດເວລາ
+                return new Promise(() => {});
             }).catch(e => console.log('Web Lock API Error:', e));
         }
     }
     enableBackgroundKeepAlive();
 
-    // Re-sync ເມື່ອສະຫຼັບກັບມາທີ່ໜ້າຕ່າງເວັບໄຊ
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden && botPanel.style.display === 'flex') {
             updateSyncTimer();
         }
     });
 
-    // --- Settings Modal Elements ---
     const settingsModal = document.getElementById('settings-modal');
     const settingsOpenBtn = document.getElementById('settings-open-btn');
     const settingsCloseBtn = document.getElementById('settings-close-btn');
 
-    settingsOpenBtn.addEventListener('click', () => {
-        settingsModal.classList.add('active');
-    });
-
-    function closeSettingsModal() {
-        settingsModal.classList.remove('active');
-    }
-
+    settingsOpenBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+    function closeSettingsModal() { settingsModal.classList.remove('active'); }
     settingsCloseBtn.addEventListener('click', closeSettingsModal);
+    settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettingsModal(); });
 
-    settingsModal.addEventListener('click', (e) => {
-        if (e.target === settingsModal) closeSettingsModal();
-    });
-
-    // --- Sync Time Toggle Logic ---
-    const syncTimeToggleBtn = document.getElementById('sync-time-toggle-btn');
-    const syncTimeIcon = document.getElementById('sync-time-icon');
-    const syncTimeText = document.getElementById('sync-time-text');
-    const offsetControlPanel = document.getElementById('offset-control-panel');
-    let isSyncTimeVisible = false;
-
-    syncTimeToggleBtn.addEventListener('click', () => {
-        isSyncTimeVisible = !isSyncTimeVisible;
-        if (isSyncTimeVisible) {
-            offsetControlPanel.style.display = 'flex';
-            syncTimeIcon.style.color = '#10b981';
-            syncTimeText.innerText = 'ເປີດຢູ່';
-        } else {
-            offsetControlPanel.style.display = 'none';
-            syncTimeIcon.style.color = '#ef4444';
-            syncTimeText.innerText = 'ປິດຢູ່';
-        }
-    });
-
-    // --- Theme Toggle Logic (Dark / Light Mode - Default: Light) ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeIcon = document.getElementById('theme-icon');
     const themeText = document.getElementById('theme-text');
@@ -1106,12 +802,11 @@
         } else {
             document.body.classList.remove('dark-theme');
             themeIcon.className = 'fa-solid fa-moon';
-            themeIcon.style.color = '#0284c7';
+            themeIcon.style.color = '#2563eb';
             themeText.innerText = 'Light Mode';
         }
     }
 
-    // ກຳນົດຄ່າເລີ່ມຕົ້ນໃຫ້ເປັນ Light Theme ສະເໝີ
     const savedTheme = localStorage.getItem('signal_trade_theme') || 'light';
     applyTheme(savedTheme);
 
@@ -1122,7 +817,6 @@
         localStorage.setItem('signal_trade_theme', newTheme);
     });
 
-    // View Mode Toggle Logic
     const viewModeToggleBtn = document.getElementById('view-mode-toggle-btn');
     const viewModeIcon = document.getElementById('view-mode-icon');
     const viewModeText = document.getElementById('view-mode-text');
@@ -1130,7 +824,6 @@
 
     viewModeToggleBtn.addEventListener('click', () => {
         viewModeState = (viewModeState + 1) % 3;
-        
         document.body.classList.remove('mobile-view-active', 'tablet-view-active');
 
         if (viewModeState === 0) {
@@ -1147,7 +840,6 @@
         }
     });
 
-    // Login Logic
     const loginPanel = document.getElementById('login-panel');
     const botPanel = document.getElementById('bot-panel');
     const usernameInput = document.getElementById('username-input');
@@ -1183,9 +875,7 @@
     });
 
     passwordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            loginSubmitBtn.click();
-        }
+        if (e.key === 'Enter') loginSubmitBtn.click();
     });
 
     let currentPair = 'BTCUSDT';
@@ -1199,12 +889,8 @@
     let audioUnlocked = false;
 
     function getAudioContext() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         return audioCtx;
     }
 
@@ -1233,8 +919,7 @@
     document.addEventListener('click', unlockMobileAudio, { once: true });
 
     const BASE_AMOUNT = 10;
-
-    const defaultPairOffsets = {
+    const pairOffsets = {
         'BTCUSDT': -6000,
         'ETHUSDT': -11000,
         'BNBUSDT': 29000,
@@ -1243,40 +928,21 @@
         'XRPUSDT': 15000,
         'DOGEUSDT': 15000,
         'TRXUSDT': 15000,
-        'PAXGUSDT': 10000
+        'PAXGUSDT': 10000,
+        'XAGUSDT': 10000
     };
-
-    function loadSavedOffsets() {
-        const saved = localStorage.getItem('signal_trade_offsets');
-        if (saved) {
-            try {
-                return Object.assign({}, defaultPairOffsets, JSON.parse(saved));
-            } catch (e) {
-                console.error("Error loading saved offsets:", e);
-            }
-        }
-        return Object.assign({}, defaultPairOffsets);
-    }
-
-    const pairOffsets = loadSavedOffsets();
 
     const livePrices = {
-        'BTCUSDT': 0.00,
-        'ETHUSDT': 0.00,
-        'BNBUSDT': 0.00,
-        'SUIUSDT': 0.00,
-        'SOLUSDT': 0.00,
-        'XRPUSDT': 0.00,
-        'DOGEUSDT': 0.00,
-        'TRXUSDT': 0.00,
-        'PAXGUSDT': 0.00
+        'BTCUSDT': 0.00, 'ETHUSDT': 0.00, 'BNBUSDT': 0.00, 'SUIUSDT': 0.00,
+        'SOLUSDT': 0.00, 'XRPUSDT': 0.00, 'DOGEUSDT': 0.00, 'TRXUSDT': 0.00,
+        'PAXGUSDT': 0.00, 'XAGUSDT': 0.00
     };
 
-    const supportedPairs = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SUIUSDT', 'SOLUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT', 'PAXGUSDT'];
+    const supportedPairs = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SUIUSDT', 'SOLUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT', 'PAXGUSDT', 'XAGUSDT'];
 
     function formatPrice(symbol, price) {
         if (!price || isNaN(price)) return '$0.00';
-        if (['SUIUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT'].includes(symbol)) {
+        if (['SUIUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT', 'XAGUSDT'].includes(symbol)) {
             return '$' + price.toFixed(4);
         }
         return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1284,23 +950,10 @@
 
     function createEmptyData() {
         return {
-            totalOrd: 0,
-            totalWin: 0,
-            totalLoss: 0,
-            totalDraw: 0,
-            maxWin: 0,
-            maxLoss: 0,
-            currentStreakWin: 0,
-            currentStreakLoss: 0,
-            profitLoss: 0,
-            history: [],
-            currentSignal: 'BUY',
-            lastResultStatus: 'WIN',
-            entryPrice: 0,
-            lastHandledSecond: -1,
-            lastSpokenKey: '',
-            currentAmount: BASE_AMOUNT,
-            stepCount: 1
+            totalOrd: 0, totalWin: 0, totalLoss: 0, totalDraw: 0,
+            maxWin: 0, maxLoss: 0, currentStreakWin: 0, currentStreakLoss: 0,
+            profitLoss: 0, history: [], currentSignal: 'BUY', lastResultStatus: 'WIN',
+            entryPrice: 0, lastHandledSecond: -1, lastSpokenKey: '', currentAmount: BASE_AMOUNT, stepCount: 1
         };
     }
 
@@ -1309,9 +962,7 @@
 
     supportedPairs.forEach(pair => {
         tradeData[pair] = {};
-        strategiesList.forEach(strat => {
-            tradeData[pair][strat] = createEmptyData();
-        });
+        strategiesList.forEach(strat => { tradeData[pair][strat] = createEmptyData(); });
     });
 
     const pairSelect = document.getElementById('pair-select');
@@ -1320,8 +971,6 @@
     const priceTitle = document.getElementById('price-title');
     const cryptoIconBox = document.getElementById('crypto-icon-box');
     const assetPriceElem = document.getElementById('asset-price');
-    const offsetValText = document.getElementById('offset-val-text');
-    const currentPairLabel = document.getElementById('current-pair-label');
     const historyPairLabel = document.getElementById('history-pair-label');
     const historyStratLabel = document.getElementById('history-strat-label');
     const capitalSelect = document.getElementById('capital-select');
@@ -1333,13 +982,8 @@
 
     soundToggleBtn.addEventListener('click', () => {
         isSoundEnabled = !isSoundEnabled;
-        if (isSoundEnabled) {
-            soundIcon.innerText = '🔊';
-            soundText.innerText = 'ເປີດສຽງ';
-        } else {
-            soundIcon.innerText = '🔇';
-            soundText.innerText = 'ປິດສຽງ';
-        }
+        soundIcon.innerText = isSoundEnabled ? '🔊' : '🔇';
+        soundText.innerText = isSoundEnabled ? 'ເປີດສຽງ' : 'ປິດສຽງ';
     });
 
     let initialBalance = parseFloat(capitalSelect.value);
@@ -1351,7 +995,6 @@
     const statusText = document.getElementById('status-text');
     const phaseText = document.getElementById('phase-text');
     const signalStatusElem = document.querySelector('.signal-status');
-
     const clearModal = document.getElementById('clear-modal');
     const modalPairText = document.getElementById('modal-pair-text');
     const modalConfirmBtn = document.getElementById('modal-confirm-btn');
@@ -1360,27 +1003,17 @@
     const logoutModal = document.getElementById('logout-modal');
     const logoutConfirmBtn = document.getElementById('logout-confirm-btn');
     const logoutCancelBtn = document.getElementById('logout-cancel-btn');
-
     const toggleHistoryBtn = document.getElementById('toggle-history-btn');
     const historyWrapper = document.getElementById('history-wrapper');
 
     toggleHistoryBtn.addEventListener('click', () => {
-        if (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') {
-            historyWrapper.style.display = 'flex';
-        } else {
-            historyWrapper.style.display = 'none';
-        }
+        historyWrapper.style.display = (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') ? 'flex' : 'none';
     });
 
     function speakSignal(rawSignal) {
         if (!isSoundEnabled) return;
         try {
-            let word = 'BUY';
-            const str = String(rawSignal).toUpperCase();
-            if (str.includes('SELL')) {
-                word = 'SELL';
-            }
-
+            let word = String(rawSignal).toUpperCase().includes('SELL') ? 'SELL' : 'BUY';
             const ctx = getAudioContext();
             const now = ctx.currentTime;
             const osc = ctx.createOscillator();
@@ -1399,21 +1032,13 @@
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(`${word}! ${word}!`);
-                utterance.lang = 'en-US';
-                utterance.rate = 1.1;
-                utterance.volume = 1.0;
-                
-                utterance.onerror = () => {
-                    playAudioFallback(word);
-                };
-
+                utterance.lang = 'en-US'; utterance.rate = 1.1; utterance.volume = 1.0;
+                utterance.onerror = () => playAudioFallback(word);
                 window.speechSynthesis.speak(utterance);
             } else {
                 playAudioFallback(word);
             }
-        } catch (e) {
-            console.log("Speech synthesis error:", e);
-        }
+        } catch (e) { console.log("Speech synthesis error:", e); }
     }
 
     function playAudioFallback(word) {
@@ -1422,10 +1047,8 @@
             const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${textToSpeak}&tl=en&client=tw-ob`;
             const audio = new Audio(audioUrl);
             audio.volume = 1.0;
-            audio.play().catch(err => console.log("Audio fallback play error:", err));
-        } catch (err) {
-            console.log("Fallback error:", err);
-        }
+            audio.play().catch(err => console.log("Audio fallback error:", err));
+        } catch (err) { console.log("Fallback error:", err); }
     }
 
     function playWinSound() {
@@ -1433,22 +1056,17 @@
         try {
             const ctx = getAudioContext();
             const now = ctx.currentTime;
-            const notes = [523.25, 659.25, 783.99, 1046.50];
-            notes.forEach((freq, idx) => {
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(freq, now + (idx * 0.08));
                 gain.gain.setValueAtTime(0.5, now + (idx * 0.08));
                 gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.08) + 0.25);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(now + (idx * 0.08));
-                osc.stop(now + (idx * 0.08) + 0.25);
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start(now + (idx * 0.08)); osc.stop(now + (idx * 0.08) + 0.25);
             });
-        } catch (e) {
-            console.log("Audio play error:", e);
-        }
+        } catch (e) {}
     }
 
     function playLossSound() {
@@ -1456,29 +1074,21 @@
         try {
             const ctx = getAudioContext();
             const now = ctx.currentTime;
-            const notes = [350, 300, 240, 180];
-            notes.forEach((freq, idx) => {
+            [350, 300, 240, 180].forEach((freq, idx) => {
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(freq, now + (idx * 0.12));
                 gain.gain.setValueAtTime(0.4, now + (idx * 0.12));
                 gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.12) + 0.3);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(now + (idx * 0.12));
-                osc.stop(now + (idx * 0.12) + 0.3);
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start(now + (idx * 0.12)); osc.stop(now + (idx * 0.12) + 0.3);
             });
-        } catch (e) {
-            console.log("Audio play error:", e);
-        }
+        } catch (e) {}
     }
 
-    // ເພີ່ມ Auto Keep-Alive reconnect WebSocket ເພື່ອໃຫ້ Run ຕະຫຼອດເວລາ
     function connectAllWebSockets() {
-        if (wsSocket) {
-            try { wsSocket.close(); } catch(e){}
-        }
+        if (wsSocket) { try { wsSocket.close(); } catch(e){} }
         if (pingInterval) clearInterval(pingInterval);
 
         const streamNames = supportedPairs.map(p => `${p.toLowerCase()}@ticker`).join('/');
@@ -1493,21 +1103,10 @@
                     assetPriceElem.innerText = formatPrice(symbol, livePrices[symbol]);
                 }
             }
-            if (data.E) {
-                serverTimeOffset = data.E - Date.now();
-            }
+            if (data.E) serverTimeOffset = data.E - Date.now();
         };
 
-        wsSocket.onerror = function (error) {
-            console.error("WebSocket Error:", error);
-        };
-
-        wsSocket.onclose = function () {
-            // ເຊື່ອມຕໍ່ໃໝ່ທັນທີເມື່ອ Connection ຫຼຸດ
-            setTimeout(connectAllWebSockets, 2000);
-        };
-
-        // ສົ່ງ Ping Frame ໄປຫາ Binance WebSockets ເພື່ອປ້ອງກັນ Timeout connection
+        wsSocket.onclose = () => setTimeout(connectAllWebSockets, 2000);
         pingInterval = setInterval(() => {
             if (wsSocket && wsSocket.readyState === WebSocket.OPEN) {
                 try { wsSocket.send(JSON.stringify({ method: "PING" })); } catch(e){}
@@ -1517,15 +1116,12 @@
 
     function getPairLabel(pair) {
         if (pair === 'PAXGUSDT') return 'GOLD';
+        if (pair === 'XAGUSDT') return 'SILVER';
         return pair.replace('USDT', '');
     }
 
-    function updateOffsetDisplay() {
-        const sec = (pairOffsets[currentPair] || 0) / 1000;
-        offsetValText.innerText = (sec >= 0 ? '+' : '') + sec + 's';
-        const label = getPairLabel(currentPair);
-        currentPairLabel.innerText = label;
-        historyPairLabel.innerText = label;
+    function updateLabelsDisplay() {
+        historyPairLabel.innerText = getPairLabel(currentPair);
         historyStratLabel.innerText = currentStrategy;
     }
 
@@ -1535,42 +1131,26 @@
         
         const paginationContainer = document.getElementById('pagination-controls');
         paginationContainer.innerHTML = '';
-
         if (totalPages <= 1) return;
 
         const prevBtn = document.createElement('button');
-        prevBtn.className = 'page-btn';
-        prevBtn.innerText = '‹';
+        prevBtn.className = 'page-btn'; prevBtn.innerText = '‹';
         prevBtn.disabled = currentPage === 1;
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderPairStats();
-            }
-        });
+        prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderPairStats(); } });
         paginationContainer.appendChild(prevBtn);
 
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement('button');
             pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
             pageBtn.innerText = i;
-            pageBtn.addEventListener('click', () => {
-                currentPage = i;
-                renderPairStats();
-            });
+            pageBtn.addEventListener('click', () => { currentPage = i; renderPairStats(); });
             paginationContainer.appendChild(pageBtn);
         }
 
         const nextBtn = document.createElement('button');
-        nextBtn.className = 'page-btn';
-        nextBtn.innerText = '›';
+        nextBtn.className = 'page-btn'; nextBtn.innerText = '›';
         nextBtn.disabled = currentPage === totalPages;
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderPairStats();
-            }
-        });
+        nextBtn.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; renderPairStats(); } });
         paginationContainer.appendChild(nextBtn);
     }
 
@@ -1593,21 +1173,17 @@
         profitElem.style.color = data.profitLoss >= 0 ? '#10b981' : '#ef4444';
 
         document.getElementById('total-balance').innerText = '$' + (initialBalance + data.profitLoss).toLocaleString('en-US', { minimumFractionDigits: 2 });
-
         assetPriceElem.innerText = formatPrice(currentPair, livePrices[currentPair]);
-
         martingaleStepText.innerText = `Step ${data.stepCount} ($${data.currentAmount})`;
 
         const historyRows = document.getElementById('history-rows');
         historyRows.innerHTML = '';
 
         const startIndex = (currentPage - 1) * rowsPerPage;
-        const endIndex = startIndex + rowsPerPage;
-        const paginatedHistory = data.history.slice(startIndex, endIndex);
+        const paginatedHistory = data.history.slice(startIndex, startIndex + rowsPerPage);
 
         paginatedHistory.forEach(item => {
             const tr = document.createElement('tr');
-            
             let resultClass = 'res-win';
             let resultText = '+$' + (item.amount * 0.95).toFixed(2);
             
@@ -1619,7 +1195,7 @@
                 resultText = '+$0.00';
             }
 
-            const isSmallDecimals = ['SUIUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT'].includes(item.pairSymbol);
+            const isSmallDecimals = ['SUIUSDT', 'XRPUSDT', 'DOGEUSDT', 'TRXUSDT', 'XAGUSDT'].includes(item.pairSymbol);
             const entryText = isSmallDecimals ? item.entry.toFixed(4) : item.entry.toFixed(2);
             const closeText = isSmallDecimals ? item.close.toFixed(4) : item.close.toFixed(2);
 
@@ -1653,38 +1229,20 @@
         else if (currentPair === 'DOGEUSDT') iconHtml = `<i class="fa-solid fa-dog doge-color"></i>`;
         else if (currentPair === 'TRXUSDT') iconHtml = `<i class="fa-solid fa-gem trx-color"></i>`;
         else if (currentPair === 'PAXGUSDT') iconHtml = `<i class="fa-solid fa-coins gold-color"></i>`;
+        else if (currentPair === 'XAGUSDT') iconHtml = `<i class="fa-solid fa-coins silver-color"></i>`;
 
         cryptoIconBox.innerHTML = iconHtml;
         priceTitle.innerHTML = `${pairLabel}/USDT <i class="live-dot" title="Live Stream Active"></i>`;
         
-        updateOffsetDisplay();
+        updateLabelsDisplay();
         renderPairStats();
     });
 
     strategySelect.addEventListener('change', (e) => {
         currentStrategy = e.target.value;
         currentPage = 1;
-        updateOffsetDisplay();
+        updateLabelsDisplay();
         renderPairStats();
-    });
-
-    document.getElementById('btn-sub-sec').addEventListener('click', () => {
-        pairOffsets[currentPair] = (pairOffsets[currentPair] || 0) - 1000;
-        updateOffsetDisplay();
-    });
-    document.getElementById('btn-add-sec').addEventListener('click', () => {
-        pairOffsets[currentPair] = (pairOffsets[currentPair] || 0) + 1000;
-        updateOffsetDisplay();
-    });
-
-    document.getElementById('btn-save-offset').addEventListener('click', () => {
-        localStorage.setItem('signal_trade_offsets', JSON.stringify(pairOffsets));
-        const saveBtn = document.getElementById('btn-save-offset');
-        const oldText = saveBtn.innerText;
-        saveBtn.innerText = '✅ SAVED!';
-        setTimeout(() => {
-            saveBtn.innerText = oldText;
-        }, 1200);
     });
 
     capitalSelect.addEventListener('change', (e) => {
@@ -1705,6 +1263,7 @@
             const isCandle1 = seconds < 30;
 
             if (isCandle1) {
+                // ເມື່ອຮອດ 10 วินาทีสุดท้าย ให้คำนวณราคา Entry และกำหนดสัญญาณ
                 if (remainingSeconds === 10) {
                     if (strat === 'csdt30') {
                         if (data.totalOrd > 0 && data.lastResultStatus === 'LOSS') {
@@ -1712,16 +1271,20 @@
                         }
                     } 
                     else if (strat === 'FSS') {
-                        if (data.totalOrd > 0) {
-                            if (data.lastResultStatus === 'WIN') {
-                                data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
-                            }
+                        if (data.totalOrd > 0 && data.lastResultStatus === 'WIN') {
+                            data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
                         }
                     }
-
+                    else if (strat === 'FollowTrend') {
+                        data.currentSignal = 'BUY';
+                    }
+                    else if (strat === 'Reversal') {
+                        data.currentSignal = 'SELL';
+                    }
                     data.entryPrice = currentPrice;
                 }
             } else {
+                // ເມື່ອຮອດ วินาทีสุดท้ายของแท่งไม้ ให้บันทึกผลออเดอร์เสมอ ไม่ว่าจะเปิดหน้าคู่นั้นอยู่หรือไม่
                 if (remainingSeconds === 1) {
                     addTradeHistory(pair, strat, data.currentSignal, data.entryPrice, currentPrice);
                 }
@@ -1730,10 +1293,9 @@
     }
 
     function updateSyncTimer() {
+        // ประมวลผลและบันทึกประวัติย้อนหลังให้กับทุกๆ Pair และทุก Strategy ใน background
         Object.keys(tradeData).forEach(pair => {
-            strategiesList.forEach(strat => {
-                processPairBackground(pair, strat);
-            });
+            strategiesList.forEach(strat => { processPairBackground(pair, strat); });
         });
 
         const currentOffset = pairOffsets[currentPair] || 0;
@@ -1747,17 +1309,12 @@
 
         if (isCandle1) {
             phaseText.innerText = `STAGE 1: ORDER CANDLE (${currentStrategy})`;
-            phaseText.style.color = "#0284c7";
 
             if (remainingSeconds > 10) {
                 statusText.innerHTML = "⏳ ກຳລັງວີເຄາະ...";
                 statusText.style.color = "#d97706";
-                statusText.classList.add('signal-text-large');
-                
                 signalStatusElem.classList.remove('bg-buy', 'bg-sell');
             } else {
-                statusText.classList.add('signal-text-large');
-
                 if (remainingSeconds === 10) {
                     const currentMinuteBlock = Math.floor(synchronizedNow.getTime() / 30000);
                     const signalKey = `${currentPair}-${currentStrategy}-${currentMinuteBlock}`;
@@ -1770,23 +1327,15 @@
 
                 if (data.currentSignal === 'BUY') {
                     statusText.innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> SIGNAL: BUY ($${data.currentAmount})`;
-                    statusText.style.color = '#ffffff';
-                    signalStatusElem.classList.add('bg-buy');
-                    signalStatusElem.classList.remove('bg-sell');
-                } else if (data.currentSignal === 'SELL') {
+                    signalStatusElem.classList.add('bg-buy'); signalStatusElem.classList.remove('bg-sell');
+                } else {
                     statusText.innerHTML = `<i class="fa-solid fa-arrow-trend-down"></i> SIGNAL: SELL ($${data.currentAmount})`;
-                    statusText.style.color = '#ffffff';
-                    signalStatusElem.classList.add('bg-sell');
-                    signalStatusElem.classList.remove('bg-buy');
+                    signalStatusElem.classList.add('bg-sell'); signalStatusElem.classList.remove('bg-buy');
                 }
             }
         } else {
             signalStatusElem.classList.remove('bg-buy', 'bg-sell');
-
             phaseText.innerText = "STAGE 2: RESULT CANDLE";
-            phaseText.style.color = "#0284c7";
-            
-            statusText.classList.add('signal-text-large');
             const arrowIcon = data.currentSignal === 'BUY' ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
             statusText.innerHTML = `${arrowIcon} ລໍຖ້າຜົນ (${data.currentSignal})`;
             statusText.style.color = '#d97706';
@@ -1800,14 +1349,10 @@
 
     function addTradeHistory(pair, strat, orderType, entry, close) {
         if (entry === 0) entry = close;
-        
         let resultStatus = 'LOSS';
         
-        if (close === entry) {
-            resultStatus = 'DRAW';
-        } else if ((orderType === 'BUY' && close > entry) || (orderType === 'SELL' && close < entry)) {
-            resultStatus = 'WIN';
-        }
+        if (close === entry) resultStatus = 'DRAW';
+        else if ((orderType === 'BUY' && close > entry) || (orderType === 'SELL' && close < entry)) resultStatus = 'WIN';
 
         const data = tradeData[pair][strat];
         const amount = data.currentAmount;
@@ -1817,71 +1362,43 @@
         data.lastResultStatus = resultStatus;
 
         if (resultStatus === 'WIN') {
-            data.totalWin++;
-            data.currentStreakWin++;
-            data.currentStreakLoss = 0;
+            data.totalWin++; data.currentStreakWin++; data.currentStreakLoss = 0;
             if (data.currentStreakWin > data.maxWin) data.maxWin = data.currentStreakWin;
             resultVal = amount * 0.95;
-            
-            data.currentAmount = BASE_AMOUNT;
-            data.stepCount = 1;
-            
+            data.currentAmount = BASE_AMOUNT; data.stepCount = 1;
             if (pair === currentPair && strat === currentStrategy) playWinSound();
         } else if (resultStatus === 'LOSS') {
-            data.totalLoss++;
-            data.currentStreakLoss++;
-            data.currentStreakWin = 0;
+            data.totalLoss++; data.currentStreakLoss++; data.currentStreakWin = 0;
             if (data.currentStreakLoss > data.maxLoss) data.maxLoss = data.currentStreakLoss;
             resultVal = -amount;
-
-            data.currentAmount = data.currentAmount * 2;
-            data.stepCount += 1;
-
+            data.currentAmount = data.currentAmount * 2; data.stepCount += 1;
             if (pair === currentPair && strat === currentStrategy) playLossSound();
         } else {
-            data.totalDraw++;
-            resultVal = 0;
+            data.totalDraw++; resultVal = 0;
         }
 
         data.profitLoss += resultVal;
-
         const currentOffset = pairOffsets[pair] || 0;
         const synchronizedNow = new Date((Date.now() + serverTimeOffset) + currentOffset);
         const timeStr = synchronizedNow.toTimeString().split(' ')[0];
-        const pairLabel = getPairLabel(pair);
 
         data.history.unshift({
-            timeStr,
-            pairSymbol: pair,
-            pairLabel,
-            orderType,
-            entry,
-            close,
-            amount,
-            resultStatus
+            timeStr, pairSymbol: pair, pairLabel: getPairLabel(pair),
+            orderType, entry, close, amount, resultStatus
         });
 
-        if (pair === currentPair && strat === currentStrategy) {
-            renderPairStats();
-        }
+        if (pair === currentPair && strat === currentStrategy) renderPairStats();
     }
 
     clearBtn.addEventListener('click', () => {
         unlockMobileAudio();
-        const pairLabel = getPairLabel(currentPair);
-        modalPairText.innerText = `${pairLabel} (${currentStrategy})`;
+        modalPairText.innerText = `${getPairLabel(currentPair)} (${currentStrategy})`;
         clearModal.classList.add('active');
     });
 
-    function closeClearModal() {
-        clearModal.classList.remove('active');
-    }
-
+    function closeClearModal() { clearModal.classList.remove('active'); }
     modalCancelBtn.addEventListener('click', closeClearModal);
-
-    clearModal.addEventListener('click', (e) => {
-        if (e.target === clearModal) closeClearModal();
-    });
+    clearModal.addEventListener('click', (e) => { if (e.target === clearModal) closeClearModal(); });
 
     modalConfirmBtn.addEventListener('click', () => {
         tradeData[currentPair][currentStrategy] = createEmptyData();
@@ -1890,19 +1407,10 @@
         closeClearModal();
     });
 
-    logoutBtn.addEventListener('click', () => {
-        logoutModal.classList.add('active');
-    });
-
-    function closeLogoutModal() {
-        logoutModal.classList.remove('active');
-    }
-
+    logoutBtn.addEventListener('click', () => logoutModal.classList.add('active'));
+    function closeLogoutModal() { logoutModal.classList.remove('active'); }
     logoutCancelBtn.addEventListener('click', closeLogoutModal);
-
-    logoutModal.addEventListener('click', (e) => {
-        if (e.target === logoutModal) closeLogoutModal();
-    });
+    logoutModal.addEventListener('click', (e) => { if (e.target === logoutModal) closeLogoutModal(); });
 
     logoutConfirmBtn.addEventListener('click', () => {
         clearInterval(timerInterval);
@@ -1911,7 +1419,6 @@
 
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
-
         closeLogoutModal();
         checkLoginStatus();
     });
@@ -1919,9 +1426,8 @@
     function initBot() {
         currentStrategy = 'csdt30';
         strategySelect.value = 'csdt30';
-
         connectAllWebSockets();
-        updateOffsetDisplay();
+        updateLabelsDisplay();
         renderPairStats();
         startTimer();
     }
