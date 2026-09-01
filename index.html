@@ -540,10 +540,6 @@
 </head>
 <body>
 
-<!-- Hidden Elements for iOS Canvas Video Stream PiP -->
-<canvas id="pip-canvas" width="480" height="270" style="display:none;"></canvas>
-<video id="pip-video" playsinline muted style="display:none; position:fixed; pointer-events:none; opacity:0; width:1px; height:1px;"></video>
-
 <!-- Login Panel -->
 <div class="login-panel" id="login-panel">
     <div class="login-inner">
@@ -573,10 +569,6 @@
     <div class="header">
         <span>🤖 Daimoney Signal pro</span>
         <div class="header-right">
-            <!-- ປຸ່ມເພີ່ມໃໝ່: ໂໝດໜ້າຕ່າງລອຍ (Picture-in-Picture / iOS Floating Engine) -->
-            <button class="settings-toggle-btn" id="pip-btn" title="ໂໝດລອຍ (Picture-in-Picture)">
-                <i class="fa-solid fa-window-restore"></i>
-            </button>
             <button class="settings-toggle-btn" id="settings-open-btn" title="ການຕັ້ງຄ່າ">
                 <i class="fa-solid fa-gear"></i>
             </button>
@@ -1365,85 +1357,6 @@
         }
     }
 
-    /* --- CANVAS RENDERER FOR iOS PiP ENGINE --- */
-    const pipCanvas = document.getElementById('pip-canvas');
-    const pipCtx = pipCanvas.getContext('2d');
-
-    function renderPiPCanvas(remainingSeconds, isCandle1) {
-        if (!pipCanvas) return;
-        const data = tradeData[currentPair][currentStrategy];
-        const isDark = document.body.classList.contains('dark-theme');
-        
-        // Background
-        pipCtx.fillStyle = isDark ? '#0f172a' : '#ffffff';
-        pipCtx.fillRect(0, 0, 480, 270);
-
-        // Header Border / Background
-        pipCtx.fillStyle = isDark ? '#1e293b' : '#f8fafc';
-        pipCtx.fillRect(10, 10, 460, 55);
-        
-        // Pair Title & Price
-        pipCtx.font = 'bold 20px "Noto Sans Lao", sans-serif';
-        pipCtx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
-        pipCtx.fillText(`${getPairLabel(currentPair)}/USDT`, 24, 44);
-
-        const priceText = formatPrice(currentPair, livePrices[currentPair]);
-        pipCtx.font = 'bold 20px sans-serif';
-        pipCtx.fillStyle = '#10b981';
-        pipCtx.fillText(priceText, 170, 44);
-
-        // Timer Box
-        pipCtx.font = 'bold 28px sans-serif';
-        pipCtx.fillStyle = '#ef4444';
-        pipCtx.fillText(`${remainingSeconds}s`, 400, 46);
-
-        // Signal Box Background
-        let statusBg = isDark ? '#1e293b' : '#f8fafc';
-        let statusTextColor = '#d97706';
-        let signalText = '⏳ ກຳລັງວີເຄາະ...';
-
-        if (isCandle1) {
-            if (remainingSeconds <= 10) {
-                if (data.currentSignal === 'BUY') {
-                    statusBg = '#10b981';
-                    statusTextColor = '#ffffff';
-                    signalText = `BUY  ($${data.currentAmount})`;
-                } else {
-                    statusBg = '#ef4444';
-                    statusTextColor = '#ffffff';
-                    signalText = `SELL ($${data.currentAmount})`;
-                }
-            }
-        } else {
-            statusBg = '#334155';
-            statusTextColor = '#f59e0b';
-            signalText = `RESULT (${data.currentSignal})`;
-        }
-
-        pipCtx.fillStyle = statusBg;
-        pipCtx.beginPath();
-        pipCtx.roundRect(10, 75, 460, 120, 16);
-        pipCtx.fill();
-
-        pipCtx.font = 'bold 36px "Noto Sans Lao", sans-serif';
-        pipCtx.fillStyle = statusTextColor;
-        pipCtx.textAlign = 'center';
-        pipCtx.fillText(signalText, 240, 148);
-        pipCtx.textAlign = 'left';
-
-        // Stats Footer
-        pipCtx.font = 'bold 16px sans-serif';
-        pipCtx.fillStyle = isDark ? '#94a3b8' : '#64748b';
-        
-        const validOrders = data.totalWin + data.totalLoss;
-        const winRate = validOrders > 0 ? ((data.totalWin / validOrders) * 100).toFixed(1) : '0.0';
-        pipCtx.fillText(`WinRate: ${winRate}%`, 24, 235);
-
-        const profitText = (data.profitLoss >= 0 ? '+$' : '-$') + Math.abs(data.profitLoss).toFixed(2);
-        pipCtx.fillStyle = data.profitLoss >= 0 ? '#10b981' : '#ef4444';
-        pipCtx.fillText(`Profit: ${profitText}`, 260, 235);
-    }
-
     function updateSyncTimer() {
         Object.keys(tradeData).forEach(pair => {
             strategiesList.forEach(strat => { processPairBackground(pair, strat); });
@@ -1457,9 +1370,6 @@
 
         const data = tradeData[currentPair][currentStrategy];
         const isCandle1 = seconds < 30;
-
-        // Render Canvas for PiP Streaming (iPhone iOS Support)
-        renderPiPCanvas(remainingSeconds, isCandle1);
 
         if (isCandle1) {
             phaseText.innerText = `STAGE 1: ORDER CANDLE (${currentStrategy})`;
@@ -1570,79 +1480,6 @@
         fetchBinanceKlinesHistory(currentPair, currentStrategy);
         startTimer();
     }
-
-    /* --- CROSS-PLATFORM PICTURE-IN-PICTURE ENGINE (Desktop + iPhone/iOS Compatible) --- */
-    const pipBtn = document.getElementById('pip-btn');
-    const pipVideo = document.getElementById('pip-video');
-    let pipWindow = null;
-
-    pipBtn.addEventListener('click', async () => {
-        // 1. ຖ້າເປັນ Desktop Chrome / Browsers ທີ່ຮອງຮັບ Document Picture-in-Picture
-        if ('documentPictureInPicture' in window) {
-            try {
-                if (pipWindow) {
-                    pipWindow.close();
-                    return;
-                }
-
-                pipWindow = await window.documentPictureInPicture.requestWindow({
-                    width: 380,
-                    height: 620,
-                });
-
-                [...document.styleSheets].forEach((styleSheet) => {
-                    try {
-                        const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
-                        const style = document.createElement('style');
-                        style.textContent = cssRules;
-                        pipWindow.document.head.appendChild(style);
-                    } catch (e) {
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.type = styleSheet.type;
-                        link.href = styleSheet.href;
-                        pipWindow.document.head.appendChild(link);
-                    }
-                });
-
-                const botPanelElem = document.getElementById('bot-panel');
-                pipWindow.document.body.appendChild(botPanelElem);
-                pipWindow.document.body.style.margin = '0';
-                pipWindow.document.body.style.overflow = 'hidden';
-
-                pipWindow.addEventListener('pagehide', () => {
-                    document.body.appendChild(botPanelElem);
-                    pipWindow = null;
-                });
-                return;
-            } catch (err) {
-                console.log("Document PiP Error, falling back to Video Stream PiP:", err);
-            }
-        }
-
-        // 2. ຖ້າເປັນ iOS / iPhone Safari ຫຼື ມືຖື: ໃຊ້ Canvas-to-Video Stream PiP Engine
-        try {
-            if (document.pictureInPictureElement) {
-                await document.exitPictureInPicture();
-                return;
-            }
-
-            const stream = pipCanvas.captureStream(30);
-            pipVideo.srcObject = stream;
-            await pipVideo.play();
-
-            if (pipVideo.requestPictureInPicture) {
-                await pipVideo.requestPictureInPicture();
-            } else if (pipVideo.webkitSetPresentationMode) {
-                pipVideo.webkitSetPresentationMode('picture-in-picture');
-            } else {
-                alert("ອຸປະກອນ ຫຼື ເບຼົາເຊີ ບໍ່ຮອງຮັບໜ້າຕ່າງລອຍ Picture-in-Picture");
-            }
-        } catch (e) {
-            console.error("iOS Video PiP Error:", e);
-            alert("ບໍ່ສາມາດເປີດໜ້າຕ່າງລອຍໄດ້! ກະລຸນາກວດສອບການອະນຸຍາດ Safari/Browser");
-        }
-    });
 
     checkLoginStatus();
 </script>
