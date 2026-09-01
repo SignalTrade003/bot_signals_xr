@@ -569,6 +569,10 @@
     <div class="header">
         <span>🤖 Daimoney Signal pro</span>
         <div class="header-right">
+            <!-- ປຸ່ມເພີ່ມໃໝ່: ໂໝດໜ້າຕ່າງລອຍ (Picture-in-Picture) -->
+            <button class="settings-toggle-btn" id="pip-btn" title="ໂໝດລອຍ (Picture-in-Picture)">
+                <i class="fa-solid fa-window-restore"></i>
+            </button>
             <button class="settings-toggle-btn" id="settings-open-btn" title="ການຕັ້ງຄ່າ">
                 <i class="fa-solid fa-gear"></i>
             </button>
@@ -1480,6 +1484,63 @@
         fetchBinanceKlinesHistory(currentPair, currentStrategy);
         startTimer();
     }
+
+    /* --- DOCUMENT PICTURE-IN-PICTURE ENGINE (ໂໝດໜ້າຕ່າງລອຍເທິງສຸດ) --- */
+    const pipBtn = document.getElementById('pip-btn');
+    let pipWindow = null;
+
+    pipBtn.addEventListener('click', async () => {
+        if ('documentPictureInPicture' in window) {
+            try {
+                // ຖ້າເປີດຢູ່ແລ້ວ ໃຫ້ອັດ
+                if (pipWindow) {
+                    pipWindow.close();
+                    return;
+                }
+
+                // ສ້າງໜ້າຕ່າງລອຍ (Floating Always-on-Top Window)
+                pipWindow = await window.documentPictureInPicture.requestWindow({
+                    width: 380,
+                    height: 620,
+                });
+
+                // ຄັດລອກ Style ແລະ CSS ທັງໝົດ ໄປໃສ່ໜ້າຕ່າງລອຍ
+                [...document.styleSheets].forEach((styleSheet) => {
+                    try {
+                        const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
+                        const style = document.createElement('style');
+                        style.textContent = cssRules;
+                        pipWindow.document.head.appendChild(style);
+                    } catch (e) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.type = styleSheet.type;
+                        link.href = styleSheet.href;
+                        pipWindow.document.head.appendChild(link);
+                    }
+                });
+
+                // ຍ້າຍ botPanel ເຂົ້າໄປໃນ Floating Window
+                const botPanelElem = document.getElementById('bot-panel');
+                pipWindow.document.body.appendChild(botPanelElem);
+                pipWindow.document.body.style.margin = '0';
+                pipWindow.document.body.style.overflow = 'hidden';
+
+                // ເມື່ອອັດໜ້າຕ່າງລອຍ ໃຫ້ຍ້າຍ botPanel ກັບຄືນມາໜ້າຫຼັກ
+                pipWindow.addEventListener('pagehide', () => {
+                    document.body.appendChild(botPanelElem);
+                    pipWindow = null;
+                });
+
+            } catch (err) {
+                console.error("PiP Error:", err);
+                alert("ບໍ່ສາມາດເປີດໜ້າຕ່າງລອຍໄດ້!");
+            }
+        } else {
+            // Fallback ຖ້າເບຼົາເຊີບໍ່ຮອງຮັບ Document PiP
+            window.open(window.location.href, 'DaimoneySignal', 'width=380,height=620,scrollbars=no,resizable=yes');
+        }
+    });
 
     checkLoginStatus();
 </script>
