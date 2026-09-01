@@ -992,30 +992,7 @@
         historyWrapper.style.display = (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') ? 'flex' : 'none';
     });
 
-    /* --- Centralized Signal Engine (ກຳນົດສັນຍານທີ່ແນ່ນອນ ບໍ່ໃຫ້ຄາດເຄື່ອນ) --- */
-    function getStrategySignal(data, strat) {
-        if (!data.history || data.history.length === 0) return 'BUY';
-        const lastTrade = data.history[0];
-        
-        if (strat === 'csdt30') {
-            if (lastTrade.resultStatus === 'LOSS') {
-                return lastTrade.orderType === 'BUY' ? 'SELL' : 'BUY';
-            }
-            return lastTrade.orderType;
-        } else if (strat === 'FSS') {
-            if (lastTrade.resultStatus === 'WIN') {
-                return lastTrade.orderType === 'BUY' ? 'SELL' : 'BUY';
-            }
-            return lastTrade.orderType;
-        } else if (strat === 'FollowTrend') {
-            return lastTrade.close >= lastTrade.entry ? 'BUY' : 'SELL';
-        } else if (strat === 'Reversal') {
-            return lastTrade.close >= lastTrade.entry ? 'SELL' : 'BUY';
-        }
-        return 'BUY';
-    }
-
-    /* --- BINANCE API AUTO-SYNC ENGINE --- */
+    /* --- BINANCE API AUTO-SYNC ENGINE (SUPPORT ALL STRATEGIES & CHRONOLOGICAL SYNC) --- */
     async function fetchBinanceKlinesHistory(pair, strat) {
         try {
             const targetStrat = strat || currentStrategy;
@@ -1035,15 +1012,34 @@
             currentData.profitLoss = 0;
             currentData.currentAmount = BASE_AMOUNT;
             currentData.stepCount = 1;
+            currentData.currentSignal = 'BUY';
 
-            // ປະມວນຜົນຕາມລຳດັບເວລາຈິງ (Oldest to Newest)
+            // ປະມວນຜົນຕາມລຳດັບເວລາຈິງ (Oldest to Newest) ເພື່ອໃຫ້ເວລາລ້າສຸດກົງກັບເວລາປັດຈຸບັນ
             data.forEach((k) => {
                 const openTime = new Date(k[0]);
                 const timeStr = openTime.toTimeString().split(' ')[0];
                 const open = parseFloat(k[1]);
                 const close = parseFloat(k[4]);
                 
-                const orderType = getStrategySignal(currentData, targetStrat);
+                let orderType = 'BUY';
+                
+                if (targetStrat === 'csdt30') {
+                    if (currentData.history.length > 0) {
+                        const prevRes = currentData.history[0].resultStatus;
+                        const prevOrder = currentData.history[0].orderType;
+                        orderType = (prevRes === 'LOSS') ? (prevOrder === 'BUY' ? 'SELL' : 'BUY') : prevOrder;
+                    }
+                } else if (targetStrat === 'FSS') {
+                    if (currentData.history.length > 0) {
+                        const prevRes = currentData.history[0].resultStatus;
+                        const prevOrder = currentData.history[0].orderType;
+                        orderType = (prevRes === 'WIN') ? (prevOrder === 'BUY' ? 'SELL' : 'BUY') : prevOrder;
+                    }
+                } else if (targetStrat === 'FollowTrend') {
+                    orderType = close >= open ? 'BUY' : 'SELL';
+                } else if (targetStrat === 'Reversal') {
+                    orderType = close >= open ? 'SELL' : 'BUY';
+                }
 
                 let resultStatus = 'LOSS';
                 if (close === open) resultStatus = 'DRAW';
@@ -1075,14 +1071,14 @@
 
                 currentData.profitLoss += resultVal;
                 currentData.lastResultStatus = resultStatus;
+                currentData.currentSignal = orderType;
 
+                // ເອົາລາຍການລ້າສຸດໄວ້ເທິງສຸດຂອງ Array
                 currentData.history.unshift({
                     timeStr, pairSymbol: pair, pairLabel: getPairLabel(pair),
                     orderType, entry: open, close: close, amount, resultStatus
                 });
             });
-
-            currentData.currentSignal = getStrategySignal(currentData, targetStrat);
 
             if (pair === currentPair && targetStrat === currentStrategy) {
                 renderPairStats();
@@ -1346,7 +1342,30 @@
 
             if (isCandle1) {
                 if (remainingSeconds === 10) {
-                    data.currentSignal = getStrategySignal(data, strat);
+                    if (strat === 'csdt30') {
+                        if (data.totalOrd > 0 && data.lastResultStatus === 'LOSS') {
+                            data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
+                        }
+                    } 
+                    else if (strat === 'FSS') {
+                        if (data.totalOrd > 0 && data.lastResultStatus === 'WIN') {
+                            data.currentSignal = data.currentSignal === 'BUY' ? 'SELL' : 'BUY';
+                        }
+                    }
+                    else if (strat === 'FollowTrend') {
+                        if (data.history.length > 0) {
+                            const lastClose = data.history[0].close;
+                            const lastEntry = data.history[0].entry;
+                            data.currentSignal = lastClose >= lastEntry ? 'BUY' : 'SELL';
+                        }
+                    }
+                    else if (strat === 'Reversal') {
+                        if (data.history.length > 0) {
+                            const lastClose = data.history[0].close;
+                            const lastEntry = data.history[0].entry;
+                            data.currentSignal = lastClose >= lastEntry ? 'SELL' : 'BUY';
+                        }
+                    }
                     data.entryPrice = currentPrice;
                 }
             } else {
@@ -1450,8 +1469,6 @@
             timeStr, pairSymbol: pair, pairLabel: getPairLabel(pair),
             orderType, entry, close, amount, resultStatus
         });
-
-        data.currentSignal = getStrategySignal(data, strat);
 
         if (pair === currentPair && strat === currentStrategy) renderPairStats();
     }
