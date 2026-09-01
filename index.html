@@ -261,7 +261,6 @@
         .asset-select { border-color: #f59e0b; color: #f59e0b; }
         .strategy-select { border-color: #10b981; color: #10b981; }
         .setup-btn:hover { background: var(--border-light); }
-        #clear-btn { color: #ef4444; }
 
         .sub-note { 
             font-size: 11px; 
@@ -271,7 +270,7 @@
             font-weight: 500;
         }
 
-        /* DISPLAY AREA (CLEAN REDESIGN) */
+        /* DISPLAY AREA */
         .display-area { 
             background: var(--card-bg); 
             border-radius: var(--radius-lg); 
@@ -375,6 +374,7 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
+        /* Colors for icons */
         .btc-color { color: #f7931a; }
         .eth-color { color: #627eea; }
         .sui-color { color: #0284c7; }
@@ -386,6 +386,7 @@
         .gold-color { color: #ffd700; }
         .silver-color { color: #c0c0c0; }
 
+        /* Signal Banner */
         .signal-status { 
             background: var(--panel-bg); 
             text-align: center; 
@@ -428,6 +429,7 @@
             gap: 8px;
         }
 
+        /* History Tables */
         #history-wrapper { 
             display: none; 
             flex-direction: column;
@@ -492,6 +494,7 @@
             border-color: var(--primary-accent);
         }
 
+        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -627,11 +630,9 @@
             <option value="FollowTrend">🎯 Follow Trend</option>
             <option value="Reversal">🎯 Reversal</option>
         </select>
-
-        <button id="clear-btn" class="setup-btn" title="CLEAR HISTORY">🗑️ CLEAR</button>
     </div>
 
-    <div class="sub-note">*Please pick all 3 targets before starting</div>
+    <div class="sub-note">* Auto-Sync Trade History directly from Binance API</div>
 
     <!-- Display & Analysis Area -->
     <div class="display-area">
@@ -671,7 +672,7 @@
     <!-- History Wrapper -->
     <div id="history-wrapper">
         <div class="history-header">
-            <span>📋 HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#10b981;">csdt30</span>)</span>
+            <span>📋 BINANCE HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#10b981;">csdt30</span>)</span>
             <span style="color:var(--primary-accent);">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
         </div>
 
@@ -736,21 +737,6 @@
     </div>
 </div>
 
-<!-- Clear Modal -->
-<div class="modal-overlay" id="clear-modal">
-    <div class="modal-card">
-        <div class="modal-icon"><i class="fa-solid fa-trash-can"></i></div>
-        <div class="modal-title">CLEAR DATA?</div>
-        <div class="modal-desc">
-            Are you sure you want to clear history for <b id="modal-pair-text" style="color:#10b981;">BTC (csdt30)</b>?
-        </div>
-        <div class="modal-btns">
-            <button class="modal-btn modal-btn-cancel" id="modal-cancel-btn">ຍົກເລີກ</button>
-            <button class="modal-btn modal-btn-confirm" id="modal-confirm-btn">ຕົກລົງ</button>
-        </div>
-    </div>
-</div>
-
 <!-- Logout Modal -->
 <div class="modal-overlay" id="logout-modal">
     <div class="modal-card">
@@ -777,6 +763,7 @@
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden && botPanel.style.display === 'flex') {
             updateSyncTimer();
+            fetchBinanceKlinesHistory(currentPair, currentStrategy);
         }
     });
 
@@ -991,14 +978,9 @@
     let wsSocket = null;
     let pingInterval = null;
 
-    const clearBtn = document.getElementById('clear-btn');
     const statusText = document.getElementById('status-text');
     const phaseText = document.getElementById('phase-text');
     const signalStatusElem = document.querySelector('.signal-status');
-    const clearModal = document.getElementById('clear-modal');
-    const modalPairText = document.getElementById('modal-pair-text');
-    const modalConfirmBtn = document.getElementById('modal-confirm-btn');
-    const modalCancelBtn = document.getElementById('modal-cancel-btn');
 
     const logoutModal = document.getElementById('logout-modal');
     const logoutConfirmBtn = document.getElementById('logout-confirm-btn');
@@ -1009,6 +991,102 @@
     toggleHistoryBtn.addEventListener('click', () => {
         historyWrapper.style.display = (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') ? 'flex' : 'none';
     });
+
+    /* --- BINANCE API AUTO-SYNC ENGINE (SUPPORT ALL STRATEGIES & CHRONOLOGICAL SYNC) --- */
+    async function fetchBinanceKlinesHistory(pair, strat) {
+        try {
+            const targetStrat = strat || currentStrategy;
+            const response = await fetch(`https://api.binance.com/api/v3/klines?symbol=${pair}&interval=1m&limit=30`);
+            const data = await response.json();
+            
+            const currentData = tradeData[pair][targetStrat];
+            currentData.history = [];
+            currentData.totalOrd = 0;
+            currentData.totalWin = 0;
+            currentData.totalLoss = 0;
+            currentData.totalDraw = 0;
+            currentData.maxWin = 0;
+            currentData.maxLoss = 0;
+            currentData.currentStreakWin = 0;
+            currentData.currentStreakLoss = 0;
+            currentData.profitLoss = 0;
+            currentData.currentAmount = BASE_AMOUNT;
+            currentData.stepCount = 1;
+            currentData.currentSignal = 'BUY';
+
+            // ປະມວນຜົນຕາມລຳດັບເວລາຈິງ (Oldest to Newest) ເພື່ອໃຫ້ເວລາລ້າສຸດກົງກັບເວລາປັດຈຸບັນ
+            data.forEach((k) => {
+                const openTime = new Date(k[0]);
+                const timeStr = openTime.toTimeString().split(' ')[0];
+                const open = parseFloat(k[1]);
+                const close = parseFloat(k[4]);
+                
+                let orderType = 'BUY';
+                
+                if (targetStrat === 'csdt30') {
+                    if (currentData.history.length > 0) {
+                        const prevRes = currentData.history[0].resultStatus;
+                        const prevOrder = currentData.history[0].orderType;
+                        orderType = (prevRes === 'LOSS') ? (prevOrder === 'BUY' ? 'SELL' : 'BUY') : prevOrder;
+                    }
+                } else if (targetStrat === 'FSS') {
+                    if (currentData.history.length > 0) {
+                        const prevRes = currentData.history[0].resultStatus;
+                        const prevOrder = currentData.history[0].orderType;
+                        orderType = (prevRes === 'WIN') ? (prevOrder === 'BUY' ? 'SELL' : 'BUY') : prevOrder;
+                    }
+                } else if (targetStrat === 'FollowTrend') {
+                    orderType = close >= open ? 'BUY' : 'SELL';
+                } else if (targetStrat === 'Reversal') {
+                    orderType = close >= open ? 'SELL' : 'BUY';
+                }
+
+                let resultStatus = 'LOSS';
+                if (close === open) resultStatus = 'DRAW';
+                else if ((orderType === 'BUY' && close > open) || (orderType === 'SELL' && close < open)) resultStatus = 'WIN';
+
+                let amount = currentData.currentAmount;
+                let resultVal = 0;
+                
+                currentData.totalOrd++;
+                if (resultStatus === 'WIN') {
+                    currentData.totalWin++;
+                    currentData.currentStreakWin++;
+                    currentData.currentStreakLoss = 0;
+                    if (currentData.currentStreakWin > currentData.maxWin) currentData.maxWin = currentData.currentStreakWin;
+                    resultVal = amount * 0.95;
+                    currentData.currentAmount = BASE_AMOUNT;
+                    currentData.stepCount = 1;
+                } else if (resultStatus === 'LOSS') {
+                    currentData.totalLoss++;
+                    currentData.currentStreakLoss++;
+                    currentData.currentStreakWin = 0;
+                    if (currentData.currentStreakLoss > currentData.maxLoss) currentData.maxLoss = currentData.currentStreakLoss;
+                    resultVal = -amount;
+                    currentData.currentAmount = amount * 2;
+                    currentData.stepCount += 1;
+                } else {
+                    currentData.totalDraw++;
+                }
+
+                currentData.profitLoss += resultVal;
+                currentData.lastResultStatus = resultStatus;
+                currentData.currentSignal = orderType;
+
+                // ເອົາລາຍການລ້າສຸດໄວ້ເທິງສຸດຂອງ Array
+                currentData.history.unshift({
+                    timeStr, pairSymbol: pair, pairLabel: getPairLabel(pair),
+                    orderType, entry: open, close: close, amount, resultStatus
+                });
+            });
+
+            if (pair === currentPair && targetStrat === currentStrategy) {
+                renderPairStats();
+            }
+        } catch (e) {
+            console.log("Binance Sync API Error:", e);
+        }
+    }
 
     function speakSignal(rawSignal) {
         if (!isSoundEnabled) return;
@@ -1235,14 +1313,14 @@
         priceTitle.innerHTML = `${pairLabel}/USDT <i class="live-dot" title="Live Stream Active"></i>`;
         
         updateLabelsDisplay();
-        renderPairStats();
+        fetchBinanceKlinesHistory(currentPair, currentStrategy);
     });
 
     strategySelect.addEventListener('change', (e) => {
         currentStrategy = e.target.value;
         currentPage = 1;
         updateLabelsDisplay();
-        renderPairStats();
+        fetchBinanceKlinesHistory(currentPair, currentStrategy);
     });
 
     capitalSelect.addEventListener('change', (e) => {
@@ -1263,7 +1341,6 @@
             const isCandle1 = seconds < 30;
 
             if (isCandle1) {
-                // ເມື່ອຮອດ 10 วินาทีสุดท้าย ให้คำนวณราคา Entry และกำหนดสัญญาณ
                 if (remainingSeconds === 10) {
                     if (strat === 'csdt30') {
                         if (data.totalOrd > 0 && data.lastResultStatus === 'LOSS') {
@@ -1276,15 +1353,22 @@
                         }
                     }
                     else if (strat === 'FollowTrend') {
-                        data.currentSignal = 'BUY';
+                        if (data.history.length > 0) {
+                            const lastClose = data.history[0].close;
+                            const lastEntry = data.history[0].entry;
+                            data.currentSignal = lastClose >= lastEntry ? 'BUY' : 'SELL';
+                        }
                     }
                     else if (strat === 'Reversal') {
-                        data.currentSignal = 'SELL';
+                        if (data.history.length > 0) {
+                            const lastClose = data.history[0].close;
+                            const lastEntry = data.history[0].entry;
+                            data.currentSignal = lastClose >= lastEntry ? 'SELL' : 'BUY';
+                        }
                     }
                     data.entryPrice = currentPrice;
                 }
             } else {
-                // ເມື່ອຮອດ วินาทีสุดท้ายของแท่งไม้ ให้บันทึกผลออเดอร์เสมอ ไม่ว่าจะเปิดหน้าคู่นั้นอยู่หรือไม่
                 if (remainingSeconds === 1) {
                     addTradeHistory(pair, strat, data.currentSignal, data.entryPrice, currentPrice);
                 }
@@ -1293,7 +1377,6 @@
     }
 
     function updateSyncTimer() {
-        // ประมวลผลและบันทึกประวัติย้อนหลังให้กับทุกๆ Pair และทุก Strategy ใน background
         Object.keys(tradeData).forEach(pair => {
             strategiesList.forEach(strat => { processPairBackground(pair, strat); });
         });
@@ -1390,23 +1473,6 @@
         if (pair === currentPair && strat === currentStrategy) renderPairStats();
     }
 
-    clearBtn.addEventListener('click', () => {
-        unlockMobileAudio();
-        modalPairText.innerText = `${getPairLabel(currentPair)} (${currentStrategy})`;
-        clearModal.classList.add('active');
-    });
-
-    function closeClearModal() { clearModal.classList.remove('active'); }
-    modalCancelBtn.addEventListener('click', closeClearModal);
-    clearModal.addEventListener('click', (e) => { if (e.target === clearModal) closeClearModal(); });
-
-    modalConfirmBtn.addEventListener('click', () => {
-        tradeData[currentPair][currentStrategy] = createEmptyData();
-        currentPage = 1;
-        renderPairStats();
-        closeClearModal();
-    });
-
     logoutBtn.addEventListener('click', () => logoutModal.classList.add('active'));
     function closeLogoutModal() { logoutModal.classList.remove('active'); }
     logoutCancelBtn.addEventListener('click', closeLogoutModal);
@@ -1428,7 +1494,7 @@
         strategySelect.value = 'csdt30';
         connectAllWebSockets();
         updateLabelsDisplay();
-        renderPairStats();
+        fetchBinanceKlinesHistory(currentPair, currentStrategy);
         startTimer();
     }
 
