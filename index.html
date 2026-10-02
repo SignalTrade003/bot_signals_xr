@@ -241,9 +241,11 @@
             gap: 8px; 
             margin-bottom: 10px; 
             align-items: center;
+            flex-wrap: wrap;
         }
         .asset-select, .strategy-select, .setup-btn {
             flex: 1;
+            min-width: 100px;
             height: 40px;
             font-size: 12px;
             font-weight: 700;
@@ -261,6 +263,60 @@
         .asset-select { border-color: #f59e0b; color: #f59e0b; }
         .strategy-select { border-color: #10b981; color: #10b981; }
         .setup-btn:hover { background: var(--border-light); }
+        .setup-btn.active-history {
+            background: var(--primary-accent);
+            color: #ffffff;
+            border-color: var(--primary-accent);
+        }
+
+        /* Inline Time Sync Controls Style */
+        .sync-ctrl-inline {
+            display: none; /* เริ่มต้นซ่อนไว้ตามเงื่อนไข */
+            align-items: center;
+            gap: 4px;
+            height: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0 6px;
+        }
+        .sync-ctrl-inline.active {
+            display: flex; /* แสดงเมื่อถูกเปิดใน Settings */
+        }
+        .sync-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .sync-btn:hover {
+            background: var(--primary-accent);
+            color: #ffffff;
+            border-color: var(--primary-accent);
+        }
+        .sync-save-btn {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .sync-save-btn:hover {
+            filter: brightness(1.1);
+        }
 
         .sub-note { 
             font-size: 11px; 
@@ -433,10 +489,14 @@
         #history-wrapper { 
             display: none; 
             flex-direction: column;
-            flex: 1;
-            min-height: 200px;
+            margin-bottom: 16px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
         }
-        .history-container { flex: 1; overflow-y: auto; max-height: 180px; }
+        .history-container { flex: 1; overflow-y: auto; max-height: 220px; }
         .history-header { 
             display: flex; 
             justify-content: space-between; 
@@ -509,7 +569,7 @@
             background: var(--modal-bg);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            width: 320px; padding: 20px;
+            width: 340px; padding: 20px;
             text-align: center; box-shadow: var(--shadow-md);
             transform: scale(0.95); transition: transform 0.25s ease-in-out;
         }
@@ -607,7 +667,7 @@
         </div>
     </div>
 
-    <!-- Controls -->
+    <!-- Controls Row -->
     <div class="setup-btns">
         <select id="pair-select" class="asset-select">
             <option value="BTCUSDT" selected>⚡ BTC/USDT</option>
@@ -630,9 +690,43 @@
             <option value="FollowTrend">🎯 Follow Trend</option>
             <option value="Reversal">🎯 Reversal</option>
         </select>
+
+        <!-- Inline Time Sync Controls (ຈະສະແດງເມື່ອเปิดใน Settings ເທົ່ານັ້ນ) -->
+        <div class="sync-ctrl-inline" id="sync-ctrl-inline" title="ປັບເວລາ Sync">
+            <button class="sync-btn" id="sync-minus-btn" title="ຫຼຸດເວລາ 1 ວິນາທີ">-</button>
+            <span id="sync-offset-val-text" style="min-width: 35px; text-align: center; font-weight: 700; color: #f59e0b; font-size: 11px;">-6s</span>
+            <button class="sync-btn" id="sync-plus-btn" title="ເພີ່ມເວລາ 1 ວິນາທີ">+</button>
+            <button class="sync-save-btn" id="sync-save-btn"><i class="fa-solid fa-floppy-disk"></i></button>
+        </div>
     </div>
 
     <div class="sub-note">* Auto-Sync Trade History directly from Binance API</div>
+
+    <!-- History Wrapper -->
+    <div id="history-wrapper">
+        <div class="history-header">
+            <span>📋 BINANCE HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#10b981;">csdt30</span>)</span>
+            <span style="color:var(--primary-accent);">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
+        </div>
+
+        <div class="history-container">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>TIME</th>
+                        <th>PAIR</th>
+                        <th>ORDER</th>
+                        <th>ENTRY</th>
+                        <th>CLOSE</th>
+                        <th>AMT</th>
+                        <th>RESULT</th>
+                    </tr>
+                </thead>
+                <tbody id="history-rows"></tbody>
+            </table>
+        </div>
+        <div class="pagination-container" id="pagination-controls"></div>
+    </div>
 
     <!-- Display & Analysis Area -->
     <div class="display-area">
@@ -668,32 +762,6 @@
             <span id="status-text" class="signal-text-large" style="color:#d97706;">⏳ ກຳລັງວີເຄາະ...</span>
         </div>
     </div>
-
-    <!-- History Wrapper -->
-    <div id="history-wrapper">
-        <div class="history-header">
-            <span>📋 BINANCE HISTORY (<span id="history-pair-label">BTC</span> - <span id="history-strat-label" style="color:#10b981;">csdt30</span>)</span>
-            <span style="color:var(--primary-accent);">Martingale: <b id="martingale-step-text">Step 1 ($10)</b></span>
-        </div>
-
-        <div class="history-container">
-            <table class="history-table">
-                <thead>
-                    <tr>
-                        <th>TIME</th>
-                        <th>PAIR</th>
-                        <th>ORDER</th>
-                        <th>ENTRY</th>
-                        <th>CLOSE</th>
-                        <th>AMT</th>
-                        <th>RESULT</th>
-                    </tr>
-                </thead>
-                <tbody id="history-rows"></tbody>
-            </table>
-        </div>
-        <div class="pagination-container" id="pagination-controls"></div>
-    </div>
 </div>
 
 <!-- Settings Modal -->
@@ -727,6 +795,15 @@
                 <button class="setting-action-btn" id="sound-toggle-btn">
                     <span id="sound-icon">🔊</span>
                     <span id="sound-text">ເປີດສຽງ</span>
+                </button>
+            </div>
+
+            <!-- ເພີ່ມປຸ່ມເປີດ/ປິດ ລະບົບປັບເວລາ Sync -->
+            <div class="setting-list-item">
+                <span>ປັບເວລາ Sync:</span>
+                <button class="setting-action-btn" id="sync-enable-toggle-btn">
+                    <i class="fa-solid fa-clock-rotate-left" id="sync-enable-icon" style="color:#ef4444;"></i>
+                    <span id="sync-enable-text">ປິດ</span>
                 </button>
             </div>
         </div>
@@ -771,7 +848,9 @@
     const settingsOpenBtn = document.getElementById('settings-open-btn');
     const settingsCloseBtn = document.getElementById('settings-close-btn');
 
-    settingsOpenBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+    settingsOpenBtn.addEventListener('click', () => {
+        settingsModal.classList.add('active');
+    });
     function closeSettingsModal() { settingsModal.classList.remove('active'); }
     settingsCloseBtn.addEventListener('click', closeSettingsModal);
     settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettingsModal(); });
@@ -825,6 +904,34 @@
             viewModeIcon.className = 'fa-solid fa-mobile-screen-button';
             viewModeText.innerText = 'ມຸມມອງມືຖື';
         }
+    });
+
+    /* --- ເພີ່ມລະບົບ Toggle ສະແດງ / ຊ່ອນ ປຸ່ມປັບເວລາ Sync --- */
+    const syncEnableToggleBtn = document.getElementById('sync-enable-toggle-btn');
+    const syncEnableIcon = document.getElementById('sync-enable-icon');
+    const syncEnableText = document.getElementById('sync-enable-text');
+    const syncCtrlInline = document.getElementById('sync-ctrl-inline');
+
+    function applySyncEnableState(isEnable) {
+        if (isEnable) {
+            syncCtrlInline.classList.add('active');
+            syncEnableIcon.style.color = '#10b981';
+            syncEnableText.innerText = 'ເປີດ';
+        } else {
+            syncCtrlInline.classList.remove('active');
+            syncEnableIcon.style.color = '#ef4444';
+            syncEnableText.innerText = 'ປິດ';
+        }
+    }
+
+    const savedSyncEnable = localStorage.getItem('king_ai_sync_enable') === 'true';
+    applySyncEnableState(savedSyncEnable);
+
+    syncEnableToggleBtn.addEventListener('click', () => {
+        const isCurrentlyActive = syncCtrlInline.classList.contains('active');
+        const newState = !isCurrentlyActive;
+        applySyncEnableState(newState);
+        localStorage.setItem('king_ai_sync_enable', newState);
     });
 
     const loginPanel = document.getElementById('login-panel');
@@ -906,7 +1013,7 @@
     document.addEventListener('click', unlockMobileAudio, { once: true });
 
     const BASE_AMOUNT = 10;
-    const pairOffsets = {
+    const defaultPairOffsets = {
         'BTCUSDT': -6000,
         'ETHUSDT': -11000,
         'BNBUSDT': 29000,
@@ -918,6 +1025,10 @@
         'PAXGUSDT': 10000,
         'XAGUSDT': 10000
     };
+
+    // Load Pair Offsets from localStorage or use defaults
+    const savedOffsets = localStorage.getItem('king_ai_pair_offsets');
+    const pairOffsets = savedOffsets ? JSON.parse(savedOffsets) : { ...defaultPairOffsets };
 
     const livePrices = {
         'BTCUSDT': 0.00, 'ETHUSDT': 0.00, 'BNBUSDT': 0.00, 'SUIUSDT': 0.00,
@@ -988,11 +1099,53 @@
     const toggleHistoryBtn = document.getElementById('toggle-history-btn');
     const historyWrapper = document.getElementById('history-wrapper');
 
+    /* --- Toggle ປຸ່ມ HISTORY --- */
     toggleHistoryBtn.addEventListener('click', () => {
-        historyWrapper.style.display = (historyWrapper.style.display === 'none' || historyWrapper.style.display === '') ? 'flex' : 'none';
+        const isHidden = (historyWrapper.style.display === 'none' || historyWrapper.style.display === '');
+        if (isHidden) {
+            historyWrapper.style.display = 'flex';
+            toggleHistoryBtn.classList.add('active-history');
+        } else {
+            historyWrapper.style.display = 'none';
+            toggleHistoryBtn.classList.remove('active-history');
+        }
     });
 
-    /* --- BINANCE API AUTO-SYNC ENGINE (SUPPORT ALL STRATEGIES & CHRONOLOGICAL SYNC) --- */
+    /* --- Time Sync Offset Controls --- */
+    const syncMinusBtn = document.getElementById('sync-minus-btn');
+    const syncPlusBtn = document.getElementById('sync-plus-btn');
+    const syncSaveBtn = document.getElementById('sync-save-btn');
+    const syncOffsetValText = document.getElementById('sync-offset-val-text');
+
+    function updateSyncSettingsUI() {
+        const offsetMs = pairOffsets[currentPair] || 0;
+        const seconds = (offsetMs / 1000).toFixed(0);
+        syncOffsetValText.innerText = `${seconds > 0 ? '+' : ''}${seconds}s`;
+    }
+
+    syncMinusBtn.addEventListener('click', () => {
+        if (!pairOffsets[currentPair]) pairOffsets[currentPair] = 0;
+        pairOffsets[currentPair] -= 1000;
+        updateSyncSettingsUI();
+    });
+
+    syncPlusBtn.addEventListener('click', () => {
+        if (!pairOffsets[currentPair]) pairOffsets[currentPair] = 0;
+        pairOffsets[currentPair] += 1000;
+        updateSyncSettingsUI();
+    });
+
+    syncSaveBtn.addEventListener('click', () => {
+        localStorage.setItem('king_ai_pair_offsets', JSON.stringify(pairOffsets));
+        syncSaveBtn.style.background = '#059669';
+        syncSaveBtn.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        setTimeout(() => {
+            syncSaveBtn.style.background = '#10b981';
+            syncSaveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i>`;
+        }, 1500);
+    });
+
+    /* --- BINANCE API AUTO-SYNC ENGINE --- */
     async function fetchBinanceKlinesHistory(pair, strat) {
         try {
             const targetStrat = strat || currentStrategy;
@@ -1014,7 +1167,6 @@
             currentData.stepCount = 1;
             currentData.currentSignal = 'BUY';
 
-            // ປະມວນຜົນຕາມລຳດັບເວລາຈິງ (Oldest to Newest) ເພື່ອໃຫ້ເວລາລ້າສຸດກົງກັບເວລາປັດຈຸບັນ
             data.forEach((k) => {
                 const openTime = new Date(k[0]);
                 const timeStr = openTime.toTimeString().split(' ')[0];
@@ -1073,7 +1225,6 @@
                 currentData.lastResultStatus = resultStatus;
                 currentData.currentSignal = orderType;
 
-                // ເອົາລາຍການລ້າສຸດໄວ້ເທິງສຸດຂອງ Array
                 currentData.history.unshift({
                     timeStr, pairSymbol: pair, pairLabel: getPairLabel(pair),
                     orderType, entry: open, close: close, amount, resultStatus
@@ -1201,6 +1352,7 @@
     function updateLabelsDisplay() {
         historyPairLabel.innerText = getPairLabel(currentPair);
         historyStratLabel.innerText = currentStrategy;
+        updateSyncSettingsUI();
     }
 
     function renderPagination(totalItems) {
